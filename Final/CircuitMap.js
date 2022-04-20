@@ -91,7 +91,7 @@ Promise.all([
 
             function click(elem){
                 console.log("pizza");
-                var url = "https://stackoverflow.com/questions/13630229/can-i-have-an-onclick-effect-in-css";
+                var url = "https://leoframba.github.io/Final/AbuDhabiGP/";
                 window.location = url;
             }
 
