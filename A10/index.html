@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CS360 - A10</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.js"></script>
+</head>
+
+<style>
+    .yAxis path {
+        display: none;
+    }
+    .yAxis text {
+        font-size: 15px;
+    }
+
+    .xAxis path {
+        display: none;
+    }
+    .xAxis text{
+        font-size: 15px;
+    }
+
+    .graph div{
+        float: right;
+    }
+
+
+</style>
+
+<body>
+//Title
+<h3 style="text-align: center">CS360 A10 - White Hat Black Hat</h3>
+
+//C Req
+<div class="graph">
+    <img style="text-align: left; width: 600px; height: 820px;" src="UglyGraph.png" alt="Ugly Graph">
+    <div><iframe src="nav.html" width="550" height="850" frameborder="0"></iframe></div>
+    <h5 style="text-align: right"><a href="https://vizhub.com/leoframba/4db3fd44cd854368b2b674cb3519ea68">Vizhub</a></h5>
+</div>
+<div style="margin-bottom: 100px">
+    <p>On the left is a Black Hat visualization pulled from our textbook. The author labels it "ugly" because the color used for the bars serves no other purpose than to
+    distract the user. The graph on the right is my attempt at fixing the ugly graph. I replaced the random colors with either red or green to illustrate a loss or gain in
+        population. By using appropriate colors I was able to create a graph that showcases an additional variable while also maintaining clarity. <br>
+
+    </p>
+    Changes Made:
+    <ul>
+        <li>Changed Random Colors to a Red Green Color scheme showcasing decline and growth in population</li>
+        <li>Added a color legend to support newly implemented color scheme</li>
+    </ul>
+</div>
+
+//B Req
+<div>
+    <img style="text-align: left; width: 600px; height: 400px" src="BadOrder.png" alt="Bad Order Graph">
+    <div><iframe src="BoxOfficeGraph.html" width="650" height="450" frameborder=""></iframe> </div>
+</div>
+
+<div style="margin-bottom: 100px">
+    <h5 style="text-align: left"><a href="https://vizhub.com/leoframba/71494d26f8ca457a8ed553f410a65cff">Vizhub</a></h5>
+    <p>The first graph is a Black Hat visualization pulled from our textbook. The author labels it "bad" because the bars are randomly ordered. When similarly shaped bars are placed far apart it
+        can cause the user to misinterpret the data. The graph on the right is my attempt at fixing the bad graph while using a similar data set.
+    In my graph I order the bars in descending order so that a user can more easily compare the data.</p>
+    Changes Made:
+    <ul>
+        <li>Sorted Bars in descending order </li>
+        <li>Improved title description</li>
+    </ul>
+</div>
+
+//A Req
+<div>
+    <img style="text-align: left; width: 900px; height: 600px" src="BadSymbolMap.png" alt="Bad Order Graph">
+    <div><iframe src="HousingCostMap.html" width="1000" height="750" frameborder=""></iframe> </div>
+</div>
+<div style="margin-bottom: 100px">
+    <h5 style="text-align: left"><a href="https://vizhub.com/leoframba/af2c910aa09244ae8dc4f639554686fd">Vizhub</a></h5>
+    <p>The first symbol map is one of the visualizations I submitted for our 9th Assignment. The map displays a symbol for each state illustrating the cost of
+    housing via the size of the symbol. I would label the map as a Black Hat visualization because the symbols don't illustrate teh data clearly. In the smaller states the
+    symbols overlap making them difficult to distinguish from one another. In the larger states the symbols are so far apart it's difficult to acuratley compare them. Symbols
+    are also a poor choice to visualise this data set. To fix these problems I decided to make another map that uses a sequential color scale to represent the data.
+    This alleviates the issue with over lapping symbols and makes it easier to compare data between states. It also makes it much easier to see trends in the data. I chose to show the monthly
+    cost of Transportation from the data set, and by looking at the map you cna clearly see that the West and North East regions of the US are the most expensive </p>
+    Changes Made:
+    <ul>
+        <li>Replaced Symbols with a sequential color scale </li>
+        <li>Improved title description</li>
+        <li>Improved Legend value + color</li>
+        <li>Removed ugly background color</li>
+
+    </ul>
+</div>
+
+</body>
+</html>
