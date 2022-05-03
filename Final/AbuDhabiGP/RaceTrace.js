@@ -4,7 +4,7 @@ Promise.all([
 //SVG
     const width = 1200;
     const height = 900;
-    const margin = {t: 100, b: 100, l: 100, r: 20};
+    const margin = {t: 100, b: 100, l: 50, r: 20};
     const svg = d3.select("#d3-container-RaceTrace")
         .append("svg")
         .attr("height", height)
@@ -25,6 +25,15 @@ Promise.all([
         .attr("fill", "none")
         .attr("stroke", "black");
 
+    //Title
+    svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", margin.t - 40)
+        .attr("fill", "black")
+        .attr("text-anchor", "middle")
+        .attr("font-size", "40px")
+        .text("2021 Abu Dhabi Grand Prix");
+
 
     function makeTeamRect(x, y, w, h, team) {
         table.append("rect")
@@ -38,18 +47,29 @@ Promise.all([
             .style("pointer-events", "visible")
             .on("click", toggleTeam);
     }
+
     function makeDriverRect(x, y, w, h, driverId) {
+        let i = lineData.findIndex(item => item.id === driverId);
         table.append("rect")
             .attr("x", x)
             .attr("y", y)
             .attr("width", w)
             .attr("height", h)
             .attr("id", "D" + driverId)
-            .attr("fill", "white")
+            .attr("fill-opacity", function () {
+                return i >= 0 ? "1" : "0.3";
+            })
+            .attr("fill", function () {
+                return i >= 0 ? "white" : "red";
+            })
             .attr("stroke", "black")
             .attr("cursor", "pointer")
-            .style("pointer-events", "visible")
-            .on("click", toggleDriver);
+            .style("pointer-events", function () {
+                return i >= 0 ? "visible" : "none";
+            })
+            .on("click", toggleDriver)
+            .on("mouseover", highlightDriver)
+            .on("mouseout", resetDriver)
     }
 
     function teamLabel(x, y, text) {
@@ -58,6 +78,7 @@ Promise.all([
             .attr("y", y)
             .attr("text-anchor", "middle")
             .attr("font-size", "18px")
+            .style("pointer-events", "none")
             .text(text);
     }
 
@@ -71,7 +92,8 @@ Promise.all([
             .attr("stroke-width", "5")
             .attr("stroke-dasharray", function () {
                 return driver.check === "TRUE" ? 0 : 10
-            });
+            })
+            .style("pointer-events", "none");
     }
 
     const lineData = []; //line paths
@@ -87,9 +109,9 @@ Promise.all([
         d.lap = +d.lap;
 
 
-        let dIndex = lineData.findIndex(item => item.Id === d.driverId);
+        let dIndex = lineData.findIndex(item => item.id === d.driverId);
         if (dIndex === -1) {
-            lineData.push({Id: d.driverId, lapData: [{lap: 1, mSec: d.milliseconds}]})
+            lineData.push({id: d.driverId, lapData: [{lap: 1, mSec: d.milliseconds}]})
         } else {
             let prevTimeD = lineData[dIndex].lapData[lineData[dIndex].lapData.length - 1].mSec;
             lineData[dIndex].lapData.push({lap: d.lap, mSec: prevTimeD + d.milliseconds})
@@ -108,7 +130,7 @@ Promise.all([
         if (d.lap === 1) {
             d.avg = d3.mean(d.times);
         } else {
-            d.avg = lapAvg[d.lap - 2].avg + d3.mean(d.times);
+            d.avg = lapAvg[d.lap - 2].avg + d3.median(d.times);
         }
     })
     console.log(lapAvg);
@@ -128,20 +150,8 @@ Promise.all([
         .domain([1, lapAvg.length])
         .range([margin.l, width - margin.r]);
 
-    let colorDomain = [];
-    driverData.forEach(d => {
-        let index = colorDomain.indexOf(d.Name);
-        if (index === -1) {
-            colorDomain.push(d.Name)
-        }
-    });
-
-
-    console.log(colorDomain);
-
     //Yscale
     let yExtent = d3.extent(yExtentArr);
-    console.log(yExtent);
     let yPad = 1.15;
     const yScale = d3.scaleLinear()
         .domain([yExtent[0], yExtent[1]])
@@ -156,10 +166,10 @@ Promise.all([
         .call(x_axis)
     svg.append("text")
         .attr("x", width / 2)
-        .attr("y", height - margin.b / 1.3)
+        .attr("y", height - 50)
         .attr("text-anchor", "middle")
         .attr("font-size", "20px")
-        .text("Lap");
+        .text("Lap Number");
 
     //Yaxis
     const y_axis = d3.axisLeft(yScale);
@@ -171,7 +181,7 @@ Promise.all([
     svg.append("text")
         .attr("transform", "rotate(-90)")
         .attr("x", -height / 2.5)
-        .attr("y", margin.l - 30)
+        .attr("y", margin.l - 35)
         .attr("text-anchor", "middle")
         .attr("font-size", "20px")
         .text("Delta Time(s)");
@@ -181,35 +191,37 @@ Promise.all([
         .x(d => xScale(d.lap))
         .y(d => yScale(d.mSec));
 
-    //Finish line
+    //Finish Line
+    let lastLap = lapAvg.length;
     svg.append("line")
-        .attr("x1", xScale(58))
+        .attr("x1", xScale(lastLap))
         .attr("y1", height - margin.b)
-        .attr("x2", xScale(58))
+        .attr("x2", xScale(lastLap))
         .attr("y2", margin.t)
         .attr('stroke-width', '4')
         .attr("opacity", ".8")
         .attr('stroke', "black")
         .attr("stroke-dasharray", "10");
     svg.append("line")
-        .attr("x2", xScale(58) + 5)
+        .attr("x2", xScale(lastLap) + 5)
         .attr("y2", height - margin.b)
-        .attr("x1", xScale(58) + 5)
+        .attr("x1", xScale(lastLap) + 5)
         .attr("y1", margin.t)
         .attr('stroke-width', '4')
         .attr("opacity", ".8")
         .attr('stroke', "black")
         .attr("stroke-dasharray", "10");
     svg.append("line")
-        .attr("x1", xScale(58) + 10)
+        .attr("x1", xScale(lastLap) + 10)
         .attr("y1", height - margin.b)
-        .attr("x2", xScale(58) + 10)
+        .attr("x2", xScale(lastLap) + 10)
         .attr("y2", margin.t)
         .attr('stroke-width', '4')
         .attr("opacity", ".8")
         .attr('stroke', "black")
         .attr("stroke-dasharray", "10");
 
+    //Ghost car line
     svg.append("line")
         .attr("x1", margin.l)
         .attr("y1", yScale(0))
@@ -220,21 +232,20 @@ Promise.all([
         .attr('stroke', "black")
         .attr("stroke-dasharray", "20");
 
+    //Append driver paths
     for (let i = 0; i < lineData.length; i++) {
+        let di = driverData.findIndex(item => item.DriverID === lineData[i].id);
         svg.append('path')
             .attr('fill', 'none')
             .attr('stroke-width', '2')
-            .attr("id", "D" + lineData[i].Id)
+            .attr("class", "driverPath")
+            .attr("id", "D" + lineData[i].id)
             .attr("visibility", "visible")
             .attr("stroke-dasharray", function () {
-                let index = driverData.findIndex(item => item.DriverID === lineData[i].Id);
-                if (driverData[index].Check === "TRUE") {
-                    return "0";
-                } else return "5";
+                return driverData[di].Check === "TRUE" ? "0" : "10";
             })
             .attr('stroke', function () {
-                let index = driverData.findIndex(item => item.DriverID === lineData[i].Id);
-                return driverData[index].Color;
+                return driverData[di].Color;
             })
             .attr('d', makeLine(lineData[i].lapData))
     }
@@ -252,7 +263,6 @@ Promise.all([
             driverByTeam[i].mates.push({id: d.DriverID, name: d.Name, color: d.Color, check: d.Check})
         }
     })
-    console.log(driverByTeam);
 
     const rectW = (tableD.w - tableD.marginR) / 10;
     const rectH = (tableD.h - tableD.marginT) / 2;
@@ -269,7 +279,8 @@ Promise.all([
         }
     }
 
-    function toggleTeam(elem){
+    //Interaction
+    function toggleTeam(elem) {
         const attr = elem.srcElement.attributes;
         console.log(attr)
     }
@@ -279,15 +290,34 @@ Promise.all([
         console.log(attr)
         const currPath = d3.select("#" + attr.id.nodeValue);
 
-        if(currPath.attr("visibility") === "visible"){
+        if (currPath.attr("visibility") === "visible") {
             currPath.attr("visibility", "hidden");
-            d3.select(this).attr("fill-opacity", ".6")
+            d3.select(this).attr("fill-opacity", ".3")
             d3.select(this).attr("fill", "red");
-        }else {
+        } else {
             currPath.attr("visibility", "visible");
             d3.select(this).attr("fill", "white");
             d3.select(this).attr("fill-opacity", "1")
         }
+    }
+
+    function highlightDriver(elem) {
+        const attr = elem.srcElement.attributes;
+        console.log(attr)
+        const currPath = d3.select("#" + attr.id.nodeValue);
+        if (attr.fill.nodeValue !== "red") {
+            d3.selectAll(".driverPath")
+                .attr("opacity", ".2");
+
+            currPath.attr('opacity', '1')
+            currPath.attr('stroke-width', '6')
+        }
+    }
+
+    function resetDriver(elem) {
+        d3.selectAll(".driverPath")
+            .attr("opacity", "1")
+            .attr("stroke-width", "2");
     }
 
 })

@@ -1,22 +1,103 @@
-
-
+Promise.all([
+    d3.csv("QatarGP.csv"), d3.csv("Drivers.csv")]).then(([gpData, driverData]) => {
 
 //SVG
-const width = 1050;
-const height = 900;
-const margin = {t: 100, b: 200, l: 100, r: 100};
-const svg = d3.select("#d3-container-RaceTrace")
-    .append("svg")
-    .attr("height", height - margin.t - margin.b)
-    .attr("width", width - margin.r - margin.l)
-    .style("background-color", "silver")
-    .attr("viewBox", [0, 0, width, height]);
+    const width = 1200;
+    const height = 900;
+    const margin = {t: 100, b: 100, l: 50, r: 20};
+    const svg = d3.select("#d3-container-RaceTrace")
+        .append("svg")
+        .attr("height", height)
+        .attr("width", width)
+        .style("background-color", "none")
+        .attr("viewBox", [0, 0, width, height]);
 
-Promise.all([
-d3.csv("QatarGP.csv"), d3.csv("Drivers.csv")]).then(([gpData, driverData]) => {
+    const tableD = {h: 200, w: width, marginR: 0, marginT: 40}
+    const table = d3.select("#d3-container-RaceTrace")
+        .append("svg")
+        .attr("height", tableD.h)
+        .attr("width", width)
+        .style("background-color", "none")
+        .attr("viewBox", [0, 0, tableD.w, tableD.h]);
+    table.append("rect")
+        .attr("height", tableD.h)
+        .attr("width", tableD.w)
+        .attr("fill", "none")
+        .attr("stroke", "black");
+
+    //Title
+    svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", margin.t - 40)
+        .attr("fill", "black")
+        .attr("text-anchor", "middle")
+        .attr("font-size", "40px")
+        .text("2021 Qatar Grand Prix");
+
+
+    function makeTeamRect(x, y, w, h, team) {
+        table.append("rect")
+            .attr("x", x)
+            .attr("y", y)
+            .attr("width", w)
+            .attr("height", h)
+            .attr("fill", "white")
+            .attr("stroke", "black")
+            .attr("cursor", "pointer")
+            .style("pointer-events", "visible")
+            .on("click", toggleTeam);
+    }
+
+    function makeDriverRect(x, y, w, h, driverId) {
+        let i = lineData.findIndex(item => item.id === driverId);
+        table.append("rect")
+            .attr("x", x)
+            .attr("y", y)
+            .attr("width", w)
+            .attr("height", h)
+            .attr("id", "D" + driverId)
+            .attr("fill-opacity", function () {
+                return i >= 0 ? "1" : "0.3";
+            })
+            .attr("fill", function () {
+                return i >= 0 ? "white" : "red";
+            })
+            .attr("stroke", "black")
+            .attr("cursor", "pointer")
+            .style("pointer-events", function () {
+                return i >= 0 ? "visible" : "none";
+            })
+            .on("click", toggleDriver)
+            .on("mouseover", highlightDriver)
+            .on("mouseout", resetDriver)
+    }
+
+    function teamLabel(x, y, text) {
+        table.append("text")
+            .attr("x", x)
+            .attr("y", y)
+            .attr("text-anchor", "middle")
+            .attr("font-size", "18px")
+            .style("pointer-events", "none")
+            .text(text);
+    }
+
+    function legendLine(x, y, w, h, driver) {
+        table.append("line")
+            .attr("x1", x + 5)
+            .attr("y1", y + 10)
+            .attr("x2", x + w - 5)
+            .attr("y2", y + 10)
+            .attr("stroke", driver.color)
+            .attr("stroke-width", "5")
+            .attr("stroke-dasharray", function () {
+                return driver.check === "TRUE" ? 0 : 10
+            })
+            .style("pointer-events", "none");
+    }
 
     const lineData = []; //line paths
-    const lapAvg =[]; //Avg laps
+    const lapAvg = []; //Avg laps
 
     driverData.forEach(d => {
         d.DriverID = +d.DriverID;
@@ -24,33 +105,32 @@ d3.csv("QatarGP.csv"), d3.csv("Drivers.csv")]).then(([gpData, driverData]) => {
 
     gpData.forEach(d => {
         d.milliseconds = +d.milliseconds;
-        d.driverId = + d.driverId;
+        d.driverId = +d.driverId;
         d.lap = +d.lap;
 
 
-
-        let dIndex = lineData.findIndex(item => item.Id === d.driverId);
-        if(dIndex === -1){
-            lineData.push({Id: d.driverId, lapData: [{lap: 1, mSec: d.milliseconds}]})
-        }else{
+        let dIndex = lineData.findIndex(item => item.id === d.driverId);
+        if (dIndex === -1) {
+            lineData.push({id: d.driverId, lapData: [{lap: 1, mSec: d.milliseconds}]})
+        } else {
             let prevTimeD = lineData[dIndex].lapData[lineData[dIndex].lapData.length - 1].mSec;
             lineData[dIndex].lapData.push({lap: d.lap, mSec: prevTimeD + d.milliseconds})
         }
 
         let lIndex = lapAvg.findIndex(item => item.lap === d.lap);
-        if(lIndex === -1){
+        if (lIndex === -1) {
             lapAvg.push({lap: d.lap, avg: 0, times: [d.milliseconds]})
-        }else{
+        } else {
             lapAvg[lIndex].times.push(d.milliseconds);
         }
     })
 
 
     lapAvg.forEach(d => {
-        if(d.lap === 1){
+        if (d.lap === 1) {
             d.avg = d3.mean(d.times);
-        }else{
-            d.avg = lapAvg[d.lap - 2].avg + d3.mean(d.times);
+        } else {
+            d.avg = lapAvg[d.lap - 2].avg + d3.median(d.times);
         }
     })
     console.log(lapAvg);
@@ -70,42 +150,8 @@ d3.csv("QatarGP.csv"), d3.csv("Drivers.csv")]).then(([gpData, driverData]) => {
         .domain([1, lapAvg.length])
         .range([margin.l, width - margin.r]);
 
-    let colorDomain = [];
-    driverData.forEach(d => {
-        let index = colorDomain.indexOf(d.Name);
-        if(index === -1){
-            colorDomain.push(d.Name)
-        }
-    });
-
-    let colorRange = [];
-    for(let i = 0; i < colorDomain.length; i++){
-        let index = driverData.findIndex(item => item.Name === colorDomain[i])
-        colorRange.push(driverData[index].Color);
-    }
-    console.log(colorRange);
-
-    console.log(colorDomain);
-    //ColorScale
-    const colorScale = d3.scaleOrdinal()
-        .domain(colorDomain)
-        .range(colorRange);
-    const legend = d3.legendColor()
-        .scale(colorScale)
-        .title("Drivers")
-        .orient("horizontal")
-        .cells(11)
-        .shapeWidth(40)
-        .shapePadding(2);
-    svg.append("g")
-        .attr("class", "legend")
-        .attr("transform", `translate(${margin.r}, ${height - margin.b / 2})`);
-    svg.select(".legend").call(legend);
-
-
     //Yscale
     let yExtent = d3.extent(yExtentArr);
-    console.log(yExtent);
     let yPad = 1.15;
     const yScale = d3.scaleLinear()
         .domain([yExtent[0], yExtent[1]])
@@ -120,10 +166,10 @@ d3.csv("QatarGP.csv"), d3.csv("Drivers.csv")]).then(([gpData, driverData]) => {
         .call(x_axis)
     svg.append("text")
         .attr("x", width / 2)
-        .attr("y", height - margin.b / 1.3)
+        .attr("y", height - 50)
         .attr("text-anchor", "middle")
         .attr("font-size", "20px")
-        .text("Lap");
+        .text("Lap Number");
 
     //Yaxis
     const y_axis = d3.axisLeft(yScale);
@@ -135,7 +181,7 @@ d3.csv("QatarGP.csv"), d3.csv("Drivers.csv")]).then(([gpData, driverData]) => {
     svg.append("text")
         .attr("transform", "rotate(-90)")
         .attr("x", -height / 2.5)
-        .attr("y", margin.l - 30)
+        .attr("y", margin.l - 35)
         .attr("text-anchor", "middle")
         .attr("font-size", "20px")
         .text("Delta Time(s)");
@@ -145,36 +191,37 @@ d3.csv("QatarGP.csv"), d3.csv("Drivers.csv")]).then(([gpData, driverData]) => {
         .x(d => xScale(d.lap))
         .y(d => yScale(d.mSec));
 
-    //Finish line
-    const lapCount = lapAvg.length;
+    //Finish Line
+    let lastLap = lapAvg.length;
     svg.append("line")
-        .attr("x1", xScale(lapCount))
+        .attr("x1", xScale(lastLap))
         .attr("y1", height - margin.b)
-        .attr("x2", xScale(lapCount))
+        .attr("x2", xScale(lastLap))
         .attr("y2", margin.t)
         .attr('stroke-width', '4')
         .attr("opacity", ".8")
         .attr('stroke', "black")
         .attr("stroke-dasharray", "10");
     svg.append("line")
-        .attr("x2", xScale(lapCount) + 5)
+        .attr("x2", xScale(lastLap) + 5)
         .attr("y2", height - margin.b)
-        .attr("x1", xScale(lapCount) + 5)
+        .attr("x1", xScale(lastLap) + 5)
         .attr("y1", margin.t)
         .attr('stroke-width', '4')
         .attr("opacity", ".8")
         .attr('stroke', "black")
         .attr("stroke-dasharray", "10");
     svg.append("line")
-        .attr("x1", xScale(lapCount) + 10)
+        .attr("x1", xScale(lastLap) + 10)
         .attr("y1", height - margin.b)
-        .attr("x2", xScale(lapCount) + 10)
+        .attr("x2", xScale(lastLap) + 10)
         .attr("y2", margin.t)
         .attr('stroke-width', '4')
         .attr("opacity", ".8")
         .attr('stroke', "black")
         .attr("stroke-dasharray", "10");
 
+    //Ghost car line
     svg.append("line")
         .attr("x1", margin.l)
         .attr("y1", yScale(0))
@@ -185,30 +232,92 @@ d3.csv("QatarGP.csv"), d3.csv("Drivers.csv")]).then(([gpData, driverData]) => {
         .attr('stroke', "black")
         .attr("stroke-dasharray", "20");
 
-    for(let i = 0; i < lineData.length; i++){
+    //Append driver paths
+    for (let i = 0; i < lineData.length; i++) {
+        let di = driverData.findIndex(item => item.DriverID === lineData[i].id);
         svg.append('path')
             .attr('fill', 'none')
-            .attr('stroke-width', '1.5')
-            .attr("opacity", "1")
+            .attr('stroke-width', '2')
+            .attr("class", "driverPath")
+            .attr("id", "D" + lineData[i].id)
+            .attr("visibility", "visible")
             .attr("stroke-dasharray", function () {
-                let index = driverData.findIndex(item => item.DriverID === lineData[i].Id);
-                console.log(index);
-                if(driverData[index].Check === "TRUE"){
-                    return "0";
-                }else return "5";
+                return driverData[di].Check === "TRUE" ? "0" : "10";
             })
             .attr('stroke', function () {
-                let index = driverData.findIndex(item => item.DriverID === lineData[i].Id);
-                return driverData[index].Color;
+                return driverData[di].Color;
             })
             .attr('d', makeLine(lineData[i].lapData))
     }
 
-    svg.append("text")
-        .attr("x", width / 2)
-        .attr("y", margin.t / 1.5)
-        .attr("text-anchor", "middle")
-        .attr("font-size", "30px")
-        .text("2021 Qatar Grand Prix");
+    const driverByTeam = [];
+    driverData.forEach(d => {
+        let i = driverByTeam.findIndex(item => item.team === d.Team);
+        if (i === -1) {
+            driverByTeam.push({
+                team: d.Team,
+                color: d.Color,
+                mates: [{id: d.DriverID, name: d.Name, color: d.Color, check: d.Check}]
+            })
+        } else {
+            driverByTeam[i].mates.push({id: d.DriverID, name: d.Name, color: d.Color, check: d.Check})
+        }
+    })
+
+    const rectW = (tableD.w - tableD.marginR) / 10;
+    const rectH = (tableD.h - tableD.marginT) / 2;
+
+    for (let i = 0; i < 10; i++) {
+        let x = tableD.marginR + i * rectW;
+        makeTeamRect(x, 3, rectW, tableD.marginT - 3, driverByTeam[i].mates.map(d => d.id));
+        teamLabel(x + rectW / 2, tableD.marginT / 2 + 5, driverByTeam[i].team);
+        for (let k = 0; k < 2; k++) {
+            let y = tableD.marginT + k * rectH;
+            makeDriverRect(x, y, rectW, rectH, driverByTeam[i].mates[k].id)
+            teamLabel(x + rectW / 2, tableD.marginT + y - 10, driverByTeam[i].mates[k].name);
+            legendLine(x, y, rectW, rectH, driverByTeam[i].mates[k])
+        }
+    }
+
+    //Interaction
+    function toggleTeam(elem) {
+        const attr = elem.srcElement.attributes;
+        console.log(attr)
+    }
+
+    function toggleDriver(elem) {
+        const attr = elem.srcElement.attributes;
+        console.log(attr)
+        const currPath = d3.select("#" + attr.id.nodeValue);
+
+        if (currPath.attr("visibility") === "visible") {
+            currPath.attr("visibility", "hidden");
+            d3.select(this).attr("fill-opacity", ".3")
+            d3.select(this).attr("fill", "red");
+        } else {
+            currPath.attr("visibility", "visible");
+            d3.select(this).attr("fill", "white");
+            d3.select(this).attr("fill-opacity", "1")
+        }
+    }
+
+    function highlightDriver(elem) {
+        const attr = elem.srcElement.attributes;
+        console.log(attr)
+        const currPath = d3.select("#" + attr.id.nodeValue);
+        if (attr.fill.nodeValue !== "red") {
+            d3.selectAll(".driverPath")
+                .attr("opacity", ".2");
+
+            currPath.attr('opacity', '1')
+            currPath.attr('stroke-width', '6')
+        }
+    }
+
+    function resetDriver(elem) {
+        d3.selectAll(".driverPath")
+            .attr("opacity", "1")
+            .attr("stroke-width", "2");
+    }
 
 })
