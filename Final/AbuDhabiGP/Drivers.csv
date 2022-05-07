@@ -7,9 +7,9 @@ DriverID,Name,Team,Color,Check
 817,Daniel,McLaren,#FF8700,FALSE
 842,Gasly,AlphaTauri,#2B4562,FALSE
 1,Hamilton,Mercedes,#00D2BE,TRUE
-8,Kimi,Alfa Romeo,#900000,FALSE
+8,Kimi,Alfa Romeo,#A52A2A,FALSE
 840,Stroll,Aston Martin,#006F62,FALSE
-849,Latifi,Williams,#005AFF,TRUE
+849,Latifi,Williams,#8B008B,TRUE
 844,Leclerc,Ferrari,#DC0000,FALSE
 830,Verstappen,Red Bull,#0600EF,TRUE
 854,Mick,Haas,#8FBC8F,TRUE
@@ -17,5 +17,5 @@ DriverID,Name,Team,Color,Check
 846,Norris,McLaren,#FF8700,TRUE
 839,Ocon,Alpine,#0090FF,FALSE
 20,Vettel,Aston Martin,#006F62,TRUE
-847,George,Williams,#005AFF,FALSE
-841,Gio,Alfa Romeo,#900000,TRUE
+847,George,Williams,#8B008B,FALSE
+841,Gio,Alfa Romeo,#A52A2A,TRUE

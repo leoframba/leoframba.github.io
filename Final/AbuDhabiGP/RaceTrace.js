@@ -23,73 +23,6 @@ Promise.all([
         .attr("font-size", "40px")
         .text("Race 22 - 2021 Abu Dhabi Grand Prix");
 
-    function makeDriverRect(x, y, w, h, driverId) {
-        let i = lineData.findIndex(item => item.id === driverId);
-        table.append("rect")
-            .attr("x", x)
-            .attr("y", y)
-            .attr("width", w)
-            .attr("height", h)
-            .attr("toggle", "on")
-            .attr("driverId", driverId)
-            .attr("fill-opacity", function () {
-                return i >= 0 ? "1" : "0.3";
-            })
-            .attr("fill", function () {
-                return i >= 0 ? "white" : "red";
-            })
-            .attr("stroke", "black")
-            .attr("stroke-width", "0")
-            .attr("cursor", "pointer")
-            .style("pointer-events", function () {
-                return i >= 0 ? "visible" : "none";
-            })
-            .on("click", function () {
-                let d = d3.select(this);
-                const currPath = d3.select("#P" + d.attr("driverId"));
-
-                if (currPath.attr("visibility") === "visible") {
-                    currPath.attr("visibility", "hidden");
-                    d.attr("fill-opacity", ".3")
-                    d.attr("fill", "red");
-                    d.attr("toggle", "off")
-                } else {
-                    currPath.attr("visibility", "visible");
-                    d.attr("fill", "none");
-                    d.attr("fill-opacity", "1")
-                    d.attr("toggle", "on")
-                }
-            })
-            .on("mouseover", function (elem) {
-                let d = d3.select(this);
-                if(d.attr("toggle") === "on") {
-                    d.attr("fill", "#fee8c8")
-                    d.attr("stroke-width", "3")
-                }
-
-                const currPath = d3.select("#P" + d.attr("driverId"));
-                if (d.attr("toggle") === "on") {
-                    d3.selectAll(".driverPath")
-                        .attr("opacity", ".2");
-
-                    currPath.attr('opacity', '1')
-                    currPath.attr('stroke-width', '6')
-                }
-            })
-            .on("mouseout", function (d) {
-                d = d3.select(this);
-                console.log(d.attr("toggle"));
-                if(d.attr("toggle") === "on") {
-                    d.attr("fill", "none")
-                    d.attr("stroke-width", "0")
-                }
-
-                d3.selectAll(".driverPath")
-                    .attr("opacity", "1")
-                    .attr("stroke-width", "2");
-            })
-    }
-
     const lineData = []; //line paths
     const lapAvg = []; //Avg laps
 
@@ -196,8 +129,73 @@ Promise.all([
         .attr("height", height - margin.t - margin.b)
         .attr("width", xScale(57) - xScale(53))
         .attr("fill", "yellow")
-        .attr("opacity", ".2")
+        .attr("id", "sc")
+        .attr("fill-opacity", ".2")
         .attr("stroke", "none");
+    let safety = svg.append("rect")
+        .attr("x", xScale(4))
+        .attr("y", height - 65)
+        .attr("height", 30)
+        .attr("width", xScale(10) - xScale(4))
+        .attr("fill", "yellow")
+        .attr("fill-opacity", ".2")
+        .attr("stroke", "black")
+        .on("mouseover", function () {
+            let d = d3.select("#sc");
+            d.attr("stroke", "black")
+            d.attr("stroke-width", "2px")
+            d3.selectAll(".driverPath")
+                .attr("opacity", ".2")
+        })
+        .on("mouseout", function () {
+            let d = d3.select("#sc");
+            d.attr("stroke", "none")
+            d.attr("stroke-width", "2px")
+            d3.selectAll(".driverPath")
+                .attr("opacity", "1")
+        })
+    svg.append("text")
+        .attr("x", xScale(4) + (xScale(10) - xScale(4)) / 2)
+        .attr("y", height - 45)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "18px")
+        .attr("pointer-events", "none")
+        .text("Safety Car");
+    //RedFlag
+    let red = svg.append("rect")
+        .attr("x", xScale(12))
+        .attr("y", height - 65)
+        .attr("height", 30)
+        .attr("width", xScale(10) - xScale(4))
+        .attr("fill", "red")
+        .attr("fill-opacity", ".2")
+        .attr("stroke", "red")
+        .attr("stroke-width", "2")
+        .attr("stroke-dasharray", "3")
+        .on("mouseover", function () {
+            let d = d3.selectAll("#rf");
+            d.attr("stroke-width", "2px")
+            d3.selectAll(".driverPath")
+                .attr("opacity", ".2")
+        })
+        .on("mouseout", function () {
+            let d = d3.selectAll("#rf");
+            d.attr("stroke-width", "2px")
+            d3.selectAll(".driverPath")
+                .attr("opacity", "1")
+        })
+
+    svg.append("text")
+        .attr("x", xScale(12) + (xScale(10) - xScale(4)) / 2)
+        .attr("y", height - 45)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "18px")
+        .attr("pointer-events", "none")
+        .text("Red Flag");
+
+
+
+
 
     //Finish Line
     let lastLap = lapAvg.length + .2;
