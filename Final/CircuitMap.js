@@ -23,7 +23,6 @@ tool.append("rect")
     .attr("class", "background")
     .attr("height", toolD.h)
     .attr("width", toolD.w)
-    .attr("fill", "black")
 const countryLabel = tool.append("text")
     .attr("class", "countryLabel")
     .attr("x", 10)
@@ -56,12 +55,12 @@ var projection = d3.geoEqualEarth()
 
 var path = d3.geoPath().projection(projection);
 
-svg.append("rect")
-    .attr("class", "background")
-    .attr("width", width)
-    .attr("height", height)
-    .attr("fill", "white")
-    .on("dblclick", reset);
+// svg.append("rect")
+//     .attr("class", "background")
+//     .attr("width", width)
+//     .attr("height", height)
+//     //.attr("fill", "blue")
+//     .on("dblclick", reset);
 
 svg.append("text")
     .attr("x", width / 2)
@@ -72,6 +71,13 @@ svg.append("text")
 
 const g = svg.append("g");
 const circCount = [];
+
+g.append("rect")
+    .attr("class", "background")
+    .attr("width", width)
+    .attr("height", height)
+    //.attr("fill", "blue")
+    .on("dblclick", reset);
 
 Promise.all([
     d3.json("WorldMap.json"),
@@ -169,7 +175,7 @@ Promise.all([
                             .transition()
                             .duration(200)
                             .attr("r", function () { return zoom ? 3 : 15})
-                            .attr("fill", "Yellow")
+                            .attr("fill", "#fee8c8")
                             .attr("stroke-width", function () { return zoom ? .5 : 2})
                             .attr("stroke", "black")
                     })
@@ -248,10 +254,10 @@ Promise.all([
             .append("path")
                 .attr("class", "countries")
                 .attr("d", path)
-                .attr("fill", "white")
+                .attr("fill", "mintcream")
                 .attr("cursor", "pointer")
                 .attr("id", d => d.properties.sovereignt)
-                .attr("stroke-width", ".5px")
+                .attr("stroke-width", ".2px")
                 .attr("centX", function (d) {
                     let centroid = path.centroid(d)
                     return centroid[0];
@@ -280,7 +286,7 @@ Promise.all([
             .data(circData).enter()
             .append("circle", ".flag")
             .attr("class", "flag")
-            .attr("r", 3)
+            .attr("r", 4)
             .attr("id", d => { return "f" + d.circuitId})
             .attr("name", d => d.name)
             .attr("covid", d => d.covid)
@@ -350,13 +356,8 @@ Promise.all([
             d3.select(this)
                 .transition()
                 .duration(200)
-                .attr("r", function (){ return zoom ? "1" : "3"})
+                .attr("r", function (){ return zoom ? "1" : "4"})
                 .attr("cursor", "pointer")
-        }
-
-        function exit(elem) {
-            var attrs = elem.srcElement.attributes;
-            d3.select("#hoverText").remove();
         }
 
         function click(elem) {
@@ -377,27 +378,28 @@ function clicked(elem) {
     let x;
     let y;
     let zoomLevel;
+    let d = d3.select(this);
     var attrs = elem.srcElement.attributes;
-    console.log("elem =" + elem.x);
-    console.log("centered =" + centered);
-    console.log(attrs);
+    // console.log("elem =" + elem.x);
+    // console.log("centered =" + centered);
+    // // console.log(attrs);
 
-    if (elem && centered !== attrs.centX.nodeValue) {
-        let centroid = [parseInt(attrs.centX.nodeValue), parseInt(attrs.centY.nodeValue)];
+    if (elem && centered !== d.attr("centX")) {
+        let centroid = [parseInt(d.attr("centX")), parseInt(d.attr("centY"))];
         x =  centroid[0];
         y =  centroid[1];
         //Todo fix shit code for centroid
-        if(attrs.id.nodeValue === "Russia"){
+        if(d.attr("id") === "Russia"){
             x -= 100;
             y += 20;
-        }else if(attrs.id.nodeValue === "Brazil"){
+        }else if(d.attr("id") === "Brazil"){
             y += 20;
         }
-        console.log(x + " " + y);
+
         zoomLevel = zoomSettings.zoomLevel;
-        centered = attrs.centX.nodeValue;
+        centered = d.attr("centX");
         g.selectAll(".countries")
-            .attr("fill", "white")
+            .attr("fill", "mintcream")
             .attr("stroke-width", ".1px");
         g.selectAll(".flag")
             .transition()
@@ -405,11 +407,11 @@ function clicked(elem) {
             .attr("r", "1");
         setTimeout(function(){
         }, 20);
-        attrs.fill.nodeValue = "#fee8c8";
-        attrs["stroke-width"].nodeValue = ".3px"
+        d.attr("fill", "#fee8c8");
+        d.attr("stroke-width", ".2px");
 
         //Toolbar
-        let country = attrs.id.nodeValue;
+        let country = d.attr("id");
         let i = circCount.findIndex(item => item.id === country);
         let count = i >= 0 ? circCount[i].count : 0;
 
@@ -435,12 +437,12 @@ function reset(){
     g.selectAll(".countries")
         .transition()
         .duration(1000)
-        .attr("fill", "white")
-        .attr("stroke-width", ".5px");
+        .attr("fill", "mintcream")
+        .attr("stroke-width", ".2px");
     g.selectAll(".flag")
         .transition()
         .duration(1000)
-        .attr("r", 3);
+        .attr("r", 4);
     tool.select(".countryLabel")
         .text("Country: None Selected")
     tool.select(".circCount")
