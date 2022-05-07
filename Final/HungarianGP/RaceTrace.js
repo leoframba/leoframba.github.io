@@ -3,7 +3,7 @@ Promise.all([
 
 //SVG
     const width = 1200;
-    const height = 900;
+    const height = 800;
     const margin = {t: 100, b: 100, l: 50, r: 20};
     const svg = d3.select("#d3-container-RaceTrace")
         .append("svg")
@@ -12,18 +12,13 @@ Promise.all([
         .style("background-color", "none")
         .attr("viewBox", [0, 0, width, height]);
 
-    const tableD = {h: 200, w: width, marginR: 0, marginT: 40}
+    const tableD = {h: 200, w: width, marginL: 50, marginT: 40, marginR: margin.r}
     const table = d3.select("#d3-container-RaceTrace")
         .append("svg")
         .attr("height", tableD.h)
         .attr("width", width)
         .style("background-color", "none")
         .attr("viewBox", [0, 0, tableD.w, tableD.h]);
-    table.append("rect")
-        .attr("height", tableD.h)
-        .attr("width", tableD.w)
-        .attr("fill", "none")
-        .attr("stroke", "black");
 
     //Title
     svg.append("text")
@@ -32,7 +27,8 @@ Promise.all([
         .attr("fill", "black")
         .attr("text-anchor", "middle")
         .attr("font-size", "40px")
-        .text("2021 Hungarian Grand Prix");
+        .text("Race 11 - 2021 Hungarian Grand Prix");
+
 
 
     function makeTeamRect(x, y, w, h, team) {
@@ -154,11 +150,12 @@ Promise.all([
     let yExtent = d3.extent(yExtentArr);
     let yPad = 1.15;
     const yScale = d3.scaleLinear()
-        .domain([yExtent[0], yExtent[1]])
+        .domain([yExtent[0], yExtent[1] + 5])
         .range([height - margin.b, margin.t]);
 
     const x_axis = d3.axisBottom(xScale)
-        .ticks(15);
+        .ticks(25)
+        .tickSize(-height + margin.t + margin.b)
     svg.append("g")
         .attr("class", "axis")
         .attr("id", 'x_axis')
@@ -172,7 +169,8 @@ Promise.all([
         .text("Lap Number");
 
     //Yaxis
-    const y_axis = d3.axisLeft(yScale);
+    const y_axis = d3.axisLeft(yScale)
+        .tickSize(-width + margin.r + margin.l)
     svg.append("g")
         .attr("class", "axis")
         .attr("id", 'y_axis')
@@ -190,6 +188,25 @@ Promise.all([
         .curve(d3.curveLinear)
         .x(d => xScale(d.lap))
         .y(d => yScale(d.mSec));
+
+    //safety car
+    svg.append("rect")
+        .attr("x", xScale(1))
+        .attr("y", margin.t)
+        .attr("height", height - margin.t - margin.b)
+        .attr("width", xScale(2) - xScale(1))
+        .attr("fill", "yellow")
+        .attr("opacity", ".2")
+        .attr("stroke", "none");
+    //red flag
+    svg.append("line")
+        .attr("x1", xScale(2))
+        .attr("y1", margin.t)
+        .attr("x2", xScale(2))
+        .attr("y2", height - margin.t)
+        .attr("opacity", "1")
+        .attr("stroke", "red")
+        .attr("stroke-dasharray", "2");
 
     //Finish Line
     let lastLap = lapAvg.length;
@@ -264,11 +281,11 @@ Promise.all([
         }
     })
 
-    const rectW = (tableD.w - tableD.marginR) / 10;
+    const rectW = (tableD.w - tableD.marginR - tableD.marginL) / 10;
     const rectH = (tableD.h - tableD.marginT) / 2;
 
     for (let i = 0; i < 10; i++) {
-        let x = tableD.marginR + i * rectW;
+        let x = tableD.marginL + i * rectW;
         makeTeamRect(x, 3, rectW, tableD.marginT - 3, driverByTeam[i].mates.map(d => d.id));
         teamLabel(x + rectW / 2, tableD.marginT / 2 + 5, driverByTeam[i].team);
         for (let k = 0; k < 2; k++) {

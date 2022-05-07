@@ -3,7 +3,7 @@ Promise.all([
 
 //SVG
     const width = 1200;
-    const height = 900;
+    const height = 800;
     const margin = {t: 100, b: 100, l: 50, r: 20};
     const svg = d3.select("#d3-container-RaceTrace")
         .append("svg")
@@ -12,18 +12,13 @@ Promise.all([
         .style("background-color", "none")
         .attr("viewBox", [0, 0, width, height]);
 
-    const tableD = {h: 200, w: width, marginR: 0, marginT: 40}
+    const tableD = {h: 200, w: width, marginL: 50, marginT: 40, marginR: margin.r}
     const table = d3.select("#d3-container-RaceTrace")
         .append("svg")
         .attr("height", tableD.h)
         .attr("width", width)
         .style("background-color", "none")
         .attr("viewBox", [0, 0, tableD.w, tableD.h]);
-    table.append("rect")
-        .attr("height", tableD.h)
-        .attr("width", tableD.w)
-        .attr("fill", "none")
-        .attr("stroke", "black");
 
     //Title
     svg.append("text")
@@ -32,7 +27,8 @@ Promise.all([
         .attr("fill", "black")
         .attr("text-anchor", "middle")
         .attr("font-size", "40px")
-        .text("2021 Azerbaijan Grand Prix");
+        .text("Race 9 - 2021 Azerbaijan Grand Prix");
+
 
 
     function makeTeamRect(x, y, w, h, team) {
@@ -108,29 +104,28 @@ Promise.all([
         d.driverId = +d.driverId;
         d.lap = +d.lap;
 
+        if(d.driverId !== 853) {
+            let dIndex = lineData.findIndex(item => item.id === d.driverId);
+            if (dIndex === -1) {
+                lineData.push({id: d.driverId, lapData: [{lap: 1, mSec: d.milliseconds}]})
+            } else {
+                let prevTimeD = lineData[dIndex].lapData[lineData[dIndex].lapData.length - 1].mSec;
+                lineData[dIndex].lapData.push({lap: d.lap, mSec: prevTimeD + d.milliseconds})
+            }
 
-        let dIndex = lineData.findIndex(item => item.id === d.driverId);
-        if (dIndex === -1) {
-            lineData.push({id: d.driverId, lapData: [{lap: 1, mSec: d.milliseconds}]})
-        } else {
-            let prevTimeD = lineData[dIndex].lapData[lineData[dIndex].lapData.length - 1].mSec;
-            lineData[dIndex].lapData.push({lap: d.lap, mSec: prevTimeD + d.milliseconds})
-        }
-
-        let lIndex = lapAvg.findIndex(item => item.lap === d.lap);
-        if (lIndex === -1) {
-            lapAvg.push({lap: d.lap, avg: 0, times: [d.milliseconds]})
-        } else {
-            lapAvg[lIndex].times.push(d.milliseconds);
+            let lIndex = lapAvg.findIndex(item => item.lap === d.lap);
+            if (lIndex === -1) {
+                lapAvg.push({lap: d.lap, avg: 0, times: [d.milliseconds]})
+            } else {
+                lapAvg[lIndex].times.push(d.milliseconds);
+            }
         }
     })
 
-    let r = lineData.findIndex(item => item.id === 853);
-    lineData.splice(r, 1);
 
     lapAvg.forEach(d => {
         if (d.lap === 1) {
-            d.avg = d3.median(d.times);
+            d.avg = d3.mean(d.times);
         } else {
             d.avg = lapAvg[d.lap - 2].avg + d3.median(d.times);
         }
@@ -156,11 +151,12 @@ Promise.all([
     let yExtent = d3.extent(yExtentArr);
     let yPad = 1.15;
     const yScale = d3.scaleLinear()
-        .domain([yExtent[0] , yExtent[1]])
+        .domain([yExtent[0], yExtent[1] + 5])
         .range([height - margin.b, margin.t]);
 
     const x_axis = d3.axisBottom(xScale)
-        .ticks(15);
+        .ticks(25)
+        .tickSize(-height + margin.t + margin.b)
     svg.append("g")
         .attr("class", "axis")
         .attr("id", 'x_axis')
@@ -174,7 +170,8 @@ Promise.all([
         .text("Lap Number");
 
     //Yaxis
-    const y_axis = d3.axisLeft(yScale);
+    const y_axis = d3.axisLeft(yScale)
+        .tickSize(-width + margin.r + margin.l)
     svg.append("g")
         .attr("class", "axis")
         .attr("id", 'y_axis')
@@ -192,6 +189,36 @@ Promise.all([
         .curve(d3.curveLinear)
         .x(d => xScale(d.lap))
         .y(d => yScale(d.mSec));
+
+    //safety car
+    svg.append("rect")
+        .attr("x", xScale(31))
+        .attr("y", margin.t)
+        .attr("height", height - margin.t - margin.b)
+        .attr("width", xScale(35) - xScale(31))
+        .attr("fill", "yellow")
+        .attr("opacity", ".2")
+        .attr("stroke", "none");
+    //safety car
+    svg.append("rect")
+        .attr("x", xScale(46))
+        .attr("y", margin.t)
+        .attr("height", height - margin.t - margin.b)
+        .attr("width", xScale(48) - xScale(46))
+        .attr("fill", "yellow")
+        .attr("opacity", ".2")
+        .attr("stroke", "none");
+    //red flag
+    svg.append("line")
+        .attr("x1", xScale(48))
+        .attr("y1", margin.t)
+        .attr("x2", xScale(48))
+        .attr("y2", height - margin.t)
+        .attr("opacity", "1")
+        .attr("stroke", "red")
+        .attr("stroke-dasharray", "2");
+
+
 
     //Finish Line
     let lastLap = lapAvg.length;
@@ -243,6 +270,7 @@ Promise.all([
             .attr("class", "driverPath")
             .attr("id", "D" + lineData[i].id)
             .attr("visibility", "visible")
+            .attr("clip-path", "url(#clip)")
             .attr("stroke-dasharray", function () {
                 return driverData[di].Check === "TRUE" ? "0" : "10";
             })
@@ -251,7 +279,6 @@ Promise.all([
             })
             .attr('d', makeLine(lineData[i].lapData))
     }
-
 
     const driverByTeam = [];
     driverData.forEach(d => {
@@ -267,11 +294,11 @@ Promise.all([
         }
     })
 
-    const rectW = (tableD.w - tableD.marginR) / 10;
+    const rectW = (tableD.w - tableD.marginR - tableD.marginL) / 10;
     const rectH = (tableD.h - tableD.marginT) / 2;
 
     for (let i = 0; i < 10; i++) {
-        let x = tableD.marginR + i * rectW;
+        let x = tableD.marginL + i * rectW;
         makeTeamRect(x, 3, rectW, tableD.marginT - 3, driverByTeam[i].mates.map(d => d.id));
         teamLabel(x + rectW / 2, tableD.marginT / 2 + 5, driverByTeam[i].team);
         for (let k = 0; k < 2; k++) {
@@ -281,6 +308,15 @@ Promise.all([
             legendLine(x, y, rectW, rectH, driverByTeam[i].mates[k])
         }
     }
+
+    //Clip
+    svg.append("clipPath")
+        .attr("id", "clip")
+        .append("rect")
+        .attr("x", margin.l)
+        .attr("y", margin.t)
+        .attr("width", width - margin.l - margin.r)
+        .attr("height", height - margin.t - margin.b);
 
     //Interaction
     function toggleTeam(elem) {
