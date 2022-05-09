@@ -3,7 +3,7 @@ circuitId,circuitRef,name,location,country,lat,lng,alt,covid,link,round
 70,red_bull_ring,Red Bull Ring,Spielberg,Austria,47.2197,14.7647,678,TRUE,austria,9
 73,BAK,Baku City Circuit,Baku,Azerbaijan,40.3725,49.8533,-7,TRUE,azer,6
 3,bahrain,Bahrain International Circuit,Sakhir,Bahrain,26.0325,50.5106,7,TRUE,bahrain,1
-13,spa,Circuit de Spa-Francorchamps,Spa,Belgium,50.4372,5.97139,401,FALSE,Rain,12
+13,spa,Circuit de Spa-Francorchamps,Spa,Belgium,50.4372,5.97139,401,FALSE,belg,12
 18,interlagos,Autódromo José Carlos Pace,São Paulo,Brazil,-23.7036,-46.6997,785,TRUE,brazil,19
 7,villeneuve,Circuit Gilles Villeneuve,Montreal,Canada,45.5,-73.5228,13,FALSE,Covid,-1
 17,shanghai,Shanghai International Circuit,Shanghai,China,31.3389,121.22,5,FALSE,Covid,-1

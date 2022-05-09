@@ -94,7 +94,7 @@ Promise.all([
         //Race Table
         const circCols = ["Race #", "Circuit", "Country"]
         const circTable = circData.filter(d => d.round >= 0).map(function (d) {
-            return {round: d.round, name: d.name, country: d.country, id: d.circuitId, link: d.link}
+            return {round: d.round, name: d.name, country: d.country, id: d.circuitId, link: d.link, cancel: d.covid}
         });
         circTable.sort((a, b) => d3.ascending(a.round, b.round));
         console.log(circTable);
@@ -157,6 +157,7 @@ Promise.all([
                     .attr("link", circTable[i].link)
                     .attr("cursor", "pointer")
                     .attr("pointer-events", "all")
+                    .attr("cancel", circTable[i].cancel)
                     .attr("circId", circTable[i].id)
                     .on("mouseover", function (elem) {
                         let d = d3.select(this);
@@ -173,13 +174,14 @@ Promise.all([
                     })
                     .on("mouseleave", function (elem) {
                         let d = d3.select(this);
+                        console.log(d.attr("cancel"));
                         d.attr("fill", "none");
                         d.attr("stroke-width", "0");
                         d3.select("#f" + d.attr("circId"))
                             .transition()
                             .duration(200)
                             .attr("r", function () { return zoom ? 1 : 3})
-                            .attr("fill", "Green")
+                            .attr("fill", function () { return d.attr("cancel") === "TRUE" ? "green" : "red"})
                             .attr("stroke-width", "0")
 
 
@@ -326,6 +328,7 @@ Promise.all([
                     .html("Country: " + country + "<br>" + "Circuit: " + name)
             }else {
                 let status = d3.select(this).attr("url");
+                status = status === "belg" ? "Rain" : status;
                 tooltip
                     .html("Country: " + country + "<br>" + "Circuit: " + name + "<br>Canceled: " + status)
             }
