@@ -1,13 +1,11 @@
 Promise.all([
-    d3.csv("MonacoGP.csv"), d3.csv("Drivers.csv"), d3.csv("status.csv"), d3.csv("MonacoResults.csv")]).then(([gpData, driverData, statusData, resultsData]) => {
+    d3.csv("MonacoGP/MonacoGP.csv"), d3.csv("Drivers.csv"), d3.csv("status.csv"), d3.csv("MonacoGP/MonacoResults.csv")]).then(([gpData, driverData, statusData, resultsData]) => {
 
 //SVG
-    console.log(statusData);
-    console.log(resultsData);
     const width = 1200;
     const height = 800;
     const margin = {t: 100, b: 100, l: 50, r: 20};
-    const svg = d3.select("#d3-container-RaceTrace")
+    const svg = d3.select("#d3-container-RaceTraceMonaco")
         .append("svg")
         .attr("height", height)
         .attr("width", width)
@@ -16,10 +14,10 @@ Promise.all([
 
     //Title
     svg.append("text")
-        .attr("x", width / 2)
+        .attr("x", margin.l)
         .attr("y", margin.t - 40)
         .attr("fill", "black")
-        .attr("text-anchor", "middle")
+        .attr("text-anchor", "left")
         .attr("font-size", "40px")
         .text("Race 5 - 2021 Monaco Grand Prix");
 
@@ -61,8 +59,6 @@ Promise.all([
             d.avg = lapAvg[d.lap - 2].avg + d3.median(d.times);
         }
     })
-    console.log(lapAvg);
-
 
     const yExtentArr = [];
     lineData.forEach(i => {
@@ -71,7 +67,6 @@ Promise.all([
             yExtentArr.push(d.mSec);
         })
     })
-    console.log(lineData);
 
     //xScale
     const xScale = d3.scaleLinear()
@@ -143,14 +138,14 @@ Promise.all([
         .attr("fill-opacity", ".2")
         .attr("stroke", "black")
         .on("mouseover", function () {
-            let d = d3.select("#sc");
+            let d = d3.select("#d3-container-RaceTraceMonaco").select("#sc");
             d.attr("stroke", "black")
             d.attr("stroke-width", "2px")
             d3.selectAll(".driverPath")
                 .attr("opacity", ".2")
         })
         .on("mouseout", function () {
-            let d = d3.select("#sc");
+            let d = d3.select("#d3-container-RaceTraceMonaco").select("#sc");
             d.attr("stroke", "none")
             d.attr("stroke-width", "2px")
             d3.selectAll(".driverPath")
@@ -241,9 +236,6 @@ Promise.all([
         .text("Red Flag");
 
 
-
-
-
     //Finish Line
     let lastLap = lapAvg.length + .3;
     svg.append("line")
@@ -296,7 +288,6 @@ Promise.all([
             .attr("visibility", "visible")
             .attr("clip-path", "url(#clip)")
             .attr("stroke-dasharray", function () {
-                console.log(di + " " + lineData[i].id)
                 return driverData[di].Check === "TRUE" ? "0" : "10";
             })
             .attr('stroke', function () {
@@ -316,7 +307,7 @@ Promise.all([
 
     //Legend
     const legendSet = {h: 150, w: width - margin.l - margin.r, marginL: 0, marginT: 0, marginR: margin.r}
-    const legend = d3.select("#d3-container-RaceTrace")
+    const legend = d3.select("#d3-container-RaceTraceMonaco")
         .append("svg")
         .attr("height", legendSet.h)
         .attr("width", legendSet.w)
@@ -331,7 +322,7 @@ Promise.all([
         let rectW = w / columns;
         let pizza = 0;
         //Interaction rects
-        for(let i = 0; i < columns; i++) {
+        for (let i = 0; i < columns; i++) {
             let rectX = x + i * rectW;
             for (let k = 0; k < rows; k++) {
                 let rectY = y + k * rectH;
@@ -340,19 +331,27 @@ Promise.all([
                     .attr("y", rectY)
                     .attr("width", rectW)
                     .attr("height", rectH)
-                    .attr("fill", function () { return legs[pizza].laps > 0 ? "none" : "red"})
-                    .attr("fill-opacity", function () { return legs[pizza].laps > 0 ? "1" : ".3"})
+                    .attr("fill", function () {
+                        return legs[pizza].laps > 0 ? "none" : "red"
+                    })
+                    .attr("fill-opacity", function () {
+                        return legs[pizza].laps > 0 ? "1" : ".3"
+                    })
                     .attr("toggle", "on")
                     .attr("driverId", legs[pizza].id)
                     .attr("id", "L" + legs[pizza].id)
                     .attr("stroke", "black")
-                    .attr("stroke-width", function () { return legs[pizza].laps > 0 ? "0" : "3"})
+                    .attr("stroke-width", function () {
+                        return legs[pizza].laps > 0 ? "0" : "3"
+                    })
                     .attr("cursor", "pointer")
-                    .attr("pointer-events", function () { return legs[pizza].laps > 0 ? "all" : "none"})
+                    .attr("pointer-events", function () {
+                        return legs[pizza].laps > 0 ? "all" : "none"
+                    })
                     .on("click", function (elem) {
                         let d = d3.select(this);
-                        let currPath = d3.select("#P" + d.attr("driverId"));
-                        let t = d3.select("#T" + d.attr("driverId"));
+                        let currPath = d3.select("#d3-container-RaceTraceMonaco").select("#P" + d.attr("driverId"));
+                        let t = d3.select("#d3-container-RaceTraceMonaco").select("#T" + d.attr("driverId"));
 
                         if (currPath.attr("visibility") === "visible") {
                             currPath.attr("visibility", "hidden");
@@ -374,7 +373,7 @@ Promise.all([
                     })
                     .on("mouseover", function (elem) {
                         let d = d3.select(this);
-                        let t = d3.select("#T" + d.attr("driverId"));
+                        let t = d3.select("#d3-container-RaceTraceMonaco").select("#T" + d.attr("driverId"));
                         if (d.attr("toggle") === "on") {
                             d.attr("fill", "#fee8c8")
                             d.attr("stroke-width", "3")
@@ -382,7 +381,7 @@ Promise.all([
                             t.attr("stroke-width", "3")
                         }
 
-                        const currPath = d3.select("#P" + d.attr("driverId"));
+                        const currPath = d3.select("#d3-container-RaceTraceMonaco").select("#P" + d.attr("driverId"));
                         if (d.attr("toggle") === "on") {
                             d3.selectAll(".driverPath")
                                 .attr("opacity", ".2");
@@ -393,8 +392,7 @@ Promise.all([
                     })
                     .on("mouseout", function () {
                         let d = d3.select(this);
-                        let t = d3.select("#T" + d.attr("driverId"));
-                        console.log(d.attr("toggle"));
+                        let t = d3.select("#d3-container-RaceTraceMonaco").select("#T" + d.attr("driverId"));
                         if (d.attr("toggle") === "on") {
                             d.attr("fill", "none")
                             d.attr("stroke-width", "0")
@@ -439,15 +437,13 @@ Promise.all([
         }
     }
 
-    console.log(driverData);
     const results = [];
     resultsData.forEach(d => {
         d.driverId = +d.driverId;
         let i = results.findIndex(item => item.id === d.driverId)
-        if (i < 0){
+        if (i < 0) {
             let dI = driverData.findIndex(item => item.DriverID === d.driverId);
             let sI = statusData.findIndex(item => item.statusId === d.statusId);
-            console.log(dI + " " + d.driverId);
             results.push({
                 id: d.driverId,
                 name: driverData[dI].Name,
@@ -463,7 +459,7 @@ Promise.all([
         }
     })
     let legs = [...results]
-    legs.sort((a,b) => d3.ascending(a.order, b.order))
+    legs.sort((a, b) => d3.ascending(a.order, b.order))
     buildLegend(10, 2, 1, 1, legendSet.w - 1, legendSet.h - 2)
 
     function resetDriver(elem) {
@@ -474,7 +470,7 @@ Promise.all([
 
     //RaceTable
     const rtSet = {h: height + legendSet.h - margin.t - 20, w: 500, mT: 10, mB: 10, mL: 10, mR: 10}
-    const raceTable = d3.select("#d3-container-RaceTrace")
+    const raceTable = d3.select("#d3-container-RaceTraceMonaco")
         .append("svg")
         .attr("height", rtSet.h)
         .attr("width", rtSet.w)
@@ -483,14 +479,15 @@ Promise.all([
         .style("margin-top", "100px")
 
 
-    const resultCol = ["Place", "Driver", "Team", "Grid", "Laps", "Status"];
-    function buildTable(columns, rows, x, y, w, h){
+    const resultCol = ["Pos.", "Driver", "Team", "Grid", "Laps", "Status"];
+
+    function buildTable(columns, rows, x, y, w, h) {
         let rectH = h / (rows + 1);
-        let rectW = [.1, .2, .22, .12 , .12 , .1].map(d => d * w)
+        let rectW = [.1, .2, .22, .12, .12, .1].map(d => d * w)
         let rectX = x;
         let prevX = 0;
         //Title
-        for(let i = 0; i < columns; i++){
+        for (let i = 0; i < columns; i++) {
             rectX += prevX;
             prevX = rectW[i];
             raceTable.append("rect")
@@ -512,7 +509,9 @@ Promise.all([
                 .attr("font-size", "18px")
                 .attr("pointer-events", "none")
                 .style("font-weight", "bold")
-                .text(function () { return resultCol[i] })
+                .text(function () {
+                    return resultCol[i]
+                })
         }
 
         //Title line
@@ -529,25 +528,33 @@ Promise.all([
         prevX = 0;
 
         //Interaction rects
-        for(let i = 0; i < rows; i++){
+        for (let i = 0; i < rows; i++) {
             raceTable.append("rect")
                 .attr("x", x)
                 .attr("y", i * rectH + y)
                 .attr("width", w)
                 .attr("height", rectH)
-                .attr("fill", function () { return results[i].laps > 0 ? "none" : "red"})
-                .attr("fill-opacity", function () { return results[i].laps > 0 ? "1" : ".3"})
+                .attr("fill", function () {
+                    return results[i].laps > 0 ? "none" : "red"
+                })
+                .attr("fill-opacity", function () {
+                    return results[i].laps > 0 ? "1" : ".3"
+                })
                 .attr("toggle", "on")
                 .attr("driverId", results[i].id)
                 .attr("id", "T" + results[i].id)
                 .attr("stroke", "black")
-                .attr("stroke-width", function () { return results[i].laps > 0 ? "0" : "3"})
+                .attr("stroke-width", function () {
+                    return results[i].laps > 0 ? "0" : "3"
+                })
                 .attr("cursor", "pointer")
-                .attr("pointer-events", function () { return results[i].laps > 0 ? "all" : "none"})
-                .on("click", function(elem){
+                .attr("pointer-events", function () {
+                    return results[i].laps > 0 ? "all" : "none"
+                })
+                .on("click", function (elem) {
                     let d = d3.select(this);
-                    let currPath = d3.select("#P" + d.attr("driverId"));
-                    let l = d3.select("#L" + d.attr("driverId"));
+                    let currPath = d3.select("#d3-container-RaceTraceMonaco").select("#P" + d.attr("driverId"));
+                    let l = d3.select("#d3-container-RaceTraceMonaco").select("#L" + d.attr("driverId"));
 
                     if (currPath.attr("visibility") === "visible") {
                         currPath.attr("visibility", "hidden");
@@ -567,17 +574,17 @@ Promise.all([
                         l.attr("toggle", "on")
                     }
                 })
-                .on("mouseover", function (elem){
+                .on("mouseover", function (elem) {
                     let d = d3.select(this);
-                    let l = d3.select("#L" + d.attr("driverId"));
-                    if(d.attr("toggle") === "on") {
+                    let l = d3.select("#d3-container-RaceTraceMonaco").select("#L" + d.attr("driverId"));
+                    if (d.attr("toggle") === "on") {
                         d.attr("fill", "#fee8c8")
                         d.attr("stroke-width", "3")
                         l.attr("fill", "#fee8c8")
                         l.attr("stroke-width", "3")
                     }
 
-                    const currPath = d3.select("#P" + d.attr("driverId"));
+                    const currPath = d3.select("#d3-container-RaceTraceMonaco").select("#P" + d.attr("driverId"));
                     if (d.attr("toggle") === "on") {
                         d3.selectAll(".driverPath")
                             .attr("opacity", ".2");
@@ -586,10 +593,10 @@ Promise.all([
                         currPath.attr('stroke-width', '6')
                     }
                 })
-                .on("mouseout", function (){
+                .on("mouseout", function () {
                     let d = d3.select(this);
-                    let l = d3.select("#L" + d.attr("driverId"));
-                    if(d.attr("toggle") === "on") {
+                    let l = d3.select("#d3-container-RaceTraceMonaco").select("#L" + d.attr("driverId"));
+                    if (d.attr("toggle") === "on") {
                         d.attr("fill", "none")
                         d.attr("stroke-width", "0")
                         l.attr("fill", "none")
@@ -603,7 +610,7 @@ Promise.all([
         }
 
         //Table
-        for(let i = 0; i < columns; i++) {
+        for (let i = 0; i < columns; i++) {
             rectX += prevX;
             prevX = rectW[i];
             for (let k = 0; k < rows; k++) {
@@ -628,20 +635,25 @@ Promise.all([
                     })
                     .attr("font-size", "18px")
                     .attr("pointer-events", "none")
-                    .text(function (){
+                    .text(function () {
                         switch (i) {
-                            case 0: return results[k].pos === "\\N" ? "--" : results[k].pos.toString();
-                            case 1: return results[k].name;
-                            case 2: return results[k].team;
-                            case 3: return results[k].grid;
-                            case 4: return results[k].laps;
-                            case 5: return results[k].status;
+                            case 0:
+                                return results[k].pos === "\\N" ? "--" : results[k].pos.toString();
+                            case 1:
+                                return results[k].name;
+                            case 2:
+                                return results[k].team;
+                            case 3:
+                                return results[k].grid;
+                            case 4:
+                                return results[k].laps;
+                            case 5:
+                                return results[k].status;
                         }
                     });
             }
         }
     }
-    buildTable(resultCol.length, results.length, 3, 3, rtSet.w - 3, rtSet.h - 3)
 
-    console.log(results)
+    buildTable(resultCol.length, results.length, 3, 3, rtSet.w - 3, rtSet.h - 3)
 })

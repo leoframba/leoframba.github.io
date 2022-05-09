@@ -1,40 +1,397 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>CS360 Final - Circuit Map</title>-->
+<!--    <script src="https://d3js.org/d3.v7.min.js"></script>-->
+<!--    <script src="https://unpkg.com/topojson@3"></script>-->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.js"></script>-->
+<!--</head>-->
+<!--<style>-->
+
+<!--    #d3-container-CircuitMap{-->
+<!--        width: 1800px;-->
+<!--        font-size: 0;-->
+<!--        column-count: 2;-->
+<!--    }-->
+<!--    .tooltip {-->
+<!--        display: inline;-->
+<!--        position: fixed;-->
+<!--    }-->
+
+<!--    .background {-->
+<!--        fill: steelblue;-->
+<!--        fill-opacity: .4;-->
+<!--        pointer-events: all;-->
+<!--    }-->
+
+<!--    path {-->
+<!--        stroke: black;-->
+<!--    }-->
+
+
+<!--</style>-->
+
+
+<!--<body>-->
+<!--<div style="text-align: center" id="d3-container-CircuitMap"></div>-->
+<!--<script src="CircuitMap.js"></script>-->
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CS360 Final - Circuit Map</title>
+    <title>Title</title>
+
+
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://unpkg.com/topojson@3"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.js"></script>
+
+
+    <style>
+        .raceTrace{
+            width: 1925px;
+            font-size: 0;
+            column-count: 2;
+        }
+
+        /*Circuit Map*/
+        #d3-container-CircuitMap{
+            width: 1800px;
+            font-size: 0;
+            column-count: 2;
+        }
+
+        .tooltip {
+            display: inline;
+            position: absolute;
+        }
+
+        .background {
+            fill: steelblue;
+            fill-opacity: .4;
+            pointer-events: all;
+        }
+
+        /*Remove Heatmap Axis + font */
+        .heatmap .yAxis path {
+            display: none;
+        }
+        .heatmap .yAxis text {
+            font-size: 20px;
+        }
+
+        .heatmap .xAxis path {
+            display: none;
+        }
+        .heatmap .xAxis text{
+            font-size: 20px;
+        }
+
+
+        /*Race Grids */
+        #y_axis line {
+            stroke: silver;
+            opacity: .3;
+        }
+
+        #x_axis line {
+            stroke: silver;
+            opacity: .3;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        main > nav {
+            position: sticky;
+            top: 2rem;
+            align-self: start;
+        }
+
+        .section-nav li.active > a {
+            color: #333;
+            font-weight: 500;
+        }
+
+        /* Sidebar Navigation */
+        .section-nav {
+            margin-left: -15px;
+            padding-left: 0px;
+            border-left: 3px solid #efefef;
+        }
+
+        .section-nav a {
+            text-decoration: none;
+            display: block;
+            padding: .2rem 0;
+            color: #0c0c0c;
+            transition: all 50ms ease-in-out;
+        }
+
+        .section-nav a:hover,
+        .section-nav a:focus {
+            color: red;
+            font-size: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            background: #fff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+        }
+
+        ul, ol {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        li {
+            margin-left: 1rem;
+        }
+
+        h1 {
+            font-weight: 300;
+        }
+
+        /** page layout **/
+        main {
+            display: grid;
+            grid-template-columns: 1fr 15em;
+            max-width: 100em;
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        section {
+            padding-top: 2rem;
+            padding-bottom: 10rem;
+        }
+    </style>
 </head>
-<style>
+<main>
+    <div style="margin-left: -300px">
+        <h1>2021 Formula 1 Season Recap</h1>
+        <p>By Leonrdo Framba</p>
 
-    #d3-container-CircuitMap{
-        width: 1800px;
-        font-size: 0;
-        column-count: 2;
-    }
-    .tooltip {
-        display: inline;
-        position: fixed;
-    }
+        <section id="introduction">
+            <h2>Introduction</h2>
+            <p>Put in Pic</p>
+        </section>
 
-    .background {
-        fill: steelblue;
-        fill-opacity: .4;
-        pointer-events: all;
-    }
-
-    path {
-        stroke: black;
-    }
+        <section id="circMap">
+            <h2>Circuit Map</h2>
+            <div style="text-align: center" id="d3-container-CircuitMap"></div>
+            <script src="CircuitMap.js"></script>
+            <p>…</p>
+        </section>
 
 
-</style>
+        <section id="races">
+            <section id="bahrain">
+<!--                <h2>Race #1 - Bahrain Grand Prix</h2>-->
+                <div class="raceTrace" style="text-align: center" id="d3-container-RaceTraceBahrain"></div>
+                <script src="BahrainGP/RaceTrace.js"></script>
+                <p>…</p>
+            </section>
 
+            <section id="emilia">
+<!--                <h2>Race #1 - Bahrain Grand Prix</h2>-->
+                <div class="raceTrace" style="text-align: center" id="d3-container-RaceTraceEmilia"></div>
+                <script src="EmiliaGP/RaceTrace.js"></script>
+                <p>…</p>
+            </section>
 
-<body>
-<div style="text-align: center" id="d3-container-CircuitMap"></div>
-<script src="CircuitMap.js"></script>
-</body>
+            <section id="port">
+<!--                <h2>Race #1 - Bahrain Grand Prix</h2>-->
+                <div class="raceTrace" style="text-align: center" id="d3-container-RaceTracePort"></div>
+                <script src="PortugueseGP/RaceTrace.js"></script>
+                <p>…</p>
+            </section>
+
+            <section id="spainish">
+<!--                <h2>Race #1 - Bahrain Grand Prix</h2>-->
+                <div class="raceTrace" style="text-align: center" id="d3-container-RaceTraceSpanish"></div>
+                <script src="SpanishGP/RaceTrace.js"></script>
+                <p>…</p>
+            </section>
+
+            <section id="monaco">
+<!--                <h2>Race #1 - Bahrain Grand Prix</h2>-->
+                <div class="raceTrace" style="text-align: center" id="d3-container-RaceTraceMonaco"></div>
+                <script src="MonacoGP/RaceTrace.js"></script>
+                <p>…</p>
+            </section>
+
+            <section id="azer">
+<!--                <h2>Race #1 - Bahrain Grand Prix</h2>-->
+                <div class="raceTrace" style="text-align: center" id="d3-container-RaceTraceAzer"></div>
+                <script src="AzerbajianGP/RaceTrace.js"></script>
+                <p>…</p>
+            </section>
+
+            <section id="french">
+<!--                <h2>Race #1 - Bahrain Grand Prix</h2>-->
+                <div class="raceTrace" style="text-align: center" id="d3-container-RaceTraceFrench"></div>
+                <script src="FrenchGP/RaceTrace.js"></script>
+                <p>…</p>
+            </section>
+
+            <section id="styrian">
+<!--                <h2>Race #1 - Bahrain Grand Prix</h2>-->
+                <div class="raceTrace" style="text-align: center" id="d3-container-RaceTraceStyrian"></div>
+                <script src="StyrianGP/RaceTrace.js"></script>
+                <p>…</p>
+            </section>
+
+            <section id="austria">
+<!--                <h2>Race #1 - Bahrain Grand Prix</h2>-->
+                <div class="raceTrace" style="text-align: center" id="d3-container-RaceTraceAustria"></div>
+                <script src="AustrianGP/RaceTrace.js"></script>
+                <p>…</p>
+            </section>
+
+            <section id="british">
+<!--                <h2>Race #1 - Bahrain Grand Prix</h2>-->
+                <div class="raceTrace" style="text-align: center" id="d3-container-RaceTraceBritish"></div>
+                <script src="BritishGP/RaceTrace.js"></script>
+                <p>…</p>
+
+            </section>
+            <section id="hung">
+<!--                <h2>Race #1 - Bahrain Grand Prix</h2>-->
+                <div class="raceTrace" style="text-align: center" id="d3-container-RaceTraceHung"></div>
+                <script src="HungarianGP/RaceTrace.js"></script>
+                <p>…</p>
+            </section>
+
+            <section id="belg">
+                <h2>Race #1 - Bahrain Grand Prix</h2>
+
+                <p>RAIN</p>
+            </section>
+
+            <section id="dutch">
+<!--                <h2>Race #1 - Bahrain Grand Prix</h2>-->
+                <div class="raceTrace" style="text-align: center" id="d3-container-RaceTraceDutch"></div>
+                <script src="DutchGP/RaceTrace.js"></script>
+                <p>…</p>
+            </section>
+
+            <section id="italy">
+<!--                <h2>Race #1 - Bahrain Grand Prix</h2>-->
+                <div class="raceTrace" style="text-align: center" id="d3-container-RaceTraceItaly"></div>
+                <script src="ItalianGP/RaceTrace.js"></script>
+                <p>…</p>
+            </section>
+
+            <section id="russian">
+<!--            <h2>Race #1 - Bahrain Grand Prix</h2>-->
+            <div class="raceTrace" style="text-align: center" id="d3-container-RaceTraceRussia"></div>
+            <script src="RussianGP/RaceTrace.js"></script>
+            <p>…</p>
+            </section>
+
+            <section id="turk">
+<!--                <h2>Race #1 - Bahrain Grand Prix</h2>-->
+                <div class="raceTrace" style="text-align: center" id="d3-container-RaceTraceTurk"></div>
+                <script src="TurkishGP/RaceTrace.js"></script>
+                <p>…</p>
+            </section>
+
+            <section id="us">
+<!--                <h2>Race #1 - Bahrain Grand Prix</h2>-->
+                <div class="raceTrace" style="text-align: center" id="d3-container-RaceTraceUS"></div>
+                <script src="USGP/RaceTrace.js"></script>
+                <p>…</p>
+            </section>
+
+            <section id="mexico">
+<!--                <h2>Race #1 - Bahrain Grand Prix</h2>-->
+                <div class="raceTrace" style="text-align: center" id="d3-container-RaceTraceMexico"></div>
+                <script src="MexicoGP/RaceTrace.js"></script>
+                <p>…</p>
+            </section>
+
+            <section id="brazil">
+<!--                <h2>Race #1 - Bahrain Grand Prix</h2>-->
+                <div class="raceTrace" style="text-align: center" id="d3-container-RaceTraceBrazil"></div>
+                <script src="BrazilGP/RaceTrace.js"></script>
+                <p>…</p>
+            </section>
+
+            <section id="qatar">
+<!--                <h2>Race #1 - Bahrain Grand Prix</h2>-->
+                <div class="raceTrace" style="text-align: center" id="d3-container-RaceTraceQatar"></div>
+                <script src="QatarGP/RaceTrace.js"></script>
+                <p>…</p>
+            </section>
+
+            <section id="saudi">
+<!--                <h2>Race #1 - Bahrain Grand Prix</h2>-->
+                <div class="raceTrace" style="text-align: center" id="d3-container-RaceTraceSaudi"></div>
+                <script src="SaudiArabiaGP/RaceTrace.js"></script>
+                <p>…</p>
+            </section>
+
+            <section id="abu">
+                <h2>Race #1 - Bahrain Grand Prix</h2>
+                <div class="raceTrace" style="text-align: center" id="d3-container-RaceTraceAbu"></div>
+                <script src="AbuDhabiGP/RaceTrace.js"></script>
+                <p>…</p>
+            </section>
+        </section>
+
+        <section id="heatmap">
+            <div class="heatmap" style="text-align: left" id="d3-container-Heatmap"></div>
+            <script src="HeatMap/HeatLap.js"></script>
+            <p>…</p>
+        </section>
+
+    </div>
+
+    <nav class="section-nav">
+        <ol>
+            <li><a href="#introduction">Introduction</a></li>
+            <li><a href="#circMap">Circuit Map</a></li>
+            <li><a href="#races">Race Charts</a>
+                <ul>
+                    <li><a href="#bahrain">R1 - Bahrain GP</a></li>
+                    <li><a href="#emilia">R2 - Emilia Romanga GP</a></li>
+                    <li><a href="#port">R3 - Portuguese GP</a></li>
+                    <li><a href="#spainish">R4 - Spanish GP</a></li>
+                    <li><a href="#monaco">R5 - Monaco GP</a></li>
+                    <li><a href="#azer">R6 - Azer</a></li>
+                    <li><a href="#french">R7 - French GP</a></li>
+                    <li><a href="#styrian">R8 - Styrian GP</a></li>
+                    <li><a href="#austria">R9 - Austrian GP</a></li>
+                    <li><a href="#british">R10 - British GP</a></li>
+                    <li><a href="#hung">R11 - Hungarian GP</a></li>
+                    <li><a href="#belg">R12 - Belgium GP</a></li>
+                    <li><a href="#dutch">R13 - Dutch GP</a></li>
+                    <li><a href="#italy">R14 - Italian GP</a></li>
+                    <li><a href="#russian">R15 - Russian GP</a></li>
+                    <li><a href="#turk">R16 - Turkish GP</a></li>
+                    <li><a href="#us">R17 - United States GP</a></li>
+                    <li><a href="#mexico">R18 - Mexican GP</a></li>
+                    <li><a href="#brazil">R19 - Brazilian GP</a></li>
+                    <li><a href="#qatar">R20 - Qatar GP</a></li>
+                    <li><a href="#saudi">R21 - Saudi Arabian GP</a></li>
+                    <li><a href="#abu">R22 - Abu Dahbi GP</a></li>
+                </ul>
+            </li>
+            <li class=""><a href="#heatmap">Laps Per Position Heatmap</a></li>
+        </ol>
+    </nav>
+</main>
 </html>

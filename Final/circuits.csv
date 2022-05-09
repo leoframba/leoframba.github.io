@@ -1,30 +1,30 @@
 circuitId,circuitRef,name,location,country,lat,lng,alt,covid,link,round
 1,albert_park,Albert Park Grand Prix Circuit,Melbourne,Australia,-37.8497,144.968,10,FALSE,Covid,-1
-70,red_bull_ring,Red Bull Ring,Spielberg,Austria,47.2197,14.7647,678,TRUE,https://leoframba.github.io/Final/AustrianGP/,9
-73,BAK,Baku City Circuit,Baku,Azerbaijan,40.3725,49.8533,-7,TRUE,https://leoframba.github.io/Final/AzerbajianGP/,6
-3,bahrain,Bahrain International Circuit,Sakhir,Bahrain,26.0325,50.5106,7,TRUE,https://leoframba.github.io/Final/BahrainGP/,1
+70,red_bull_ring,Red Bull Ring,Spielberg,Austria,47.2197,14.7647,678,TRUE,austria,9
+73,BAK,Baku City Circuit,Baku,Azerbaijan,40.3725,49.8533,-7,TRUE,azer,6
+3,bahrain,Bahrain International Circuit,Sakhir,Bahrain,26.0325,50.5106,7,TRUE,bahrain,1
 13,spa,Circuit de Spa-Francorchamps,Spa,Belgium,50.4372,5.97139,401,FALSE,Rain,12
-18,interlagos,Autódromo José Carlos Pace,São Paulo,Brazil,-23.7036,-46.6997,785,TRUE,https://leoframba.github.io/Final/BrazilGP/,19
+18,interlagos,Autódromo José Carlos Pace,São Paulo,Brazil,-23.7036,-46.6997,785,TRUE,brazil,19
 7,villeneuve,Circuit Gilles Villeneuve,Montreal,Canada,45.5,-73.5228,13,FALSE,Covid,-1
 17,shanghai,Shanghai International Circuit,Shanghai,China,31.3389,121.22,5,FALSE,Covid,-1
-34,ricard,Circuit Paul Ricard,Le Castellet,France,43.2506,5.79167,432,TRUE,https://leoframba.github.io/Final/FrenchGP/,7
+34,ricard,Circuit Paul Ricard,Le Castellet,France,43.2506,5.79167,432,TRUE,french,7
 10,hockenheimring,Hockenheimring,Hockenheim,Germany,49.3278,8.56583,103,FALSE,Covid,-1
-11,hungaroring,Hungaroring,Budapest,Hungary,47.5789,19.2486,264,TRUE,https://leoframba.github.io/Final/HungarianGP/,11
-14,monza,Autodromo Nazionale di Monza,Monza,Italy,45.6156,9.28111,162,TRUE,https://leoframba.github.io/Final/ItalianGP/,14
+11,hungaroring,Hungaroring,Budapest,Hungary,47.5789,19.2486,264,TRUE,hung,11
+14,monza,Autodromo Nazionale di Monza,Monza,Italy,45.6156,9.28111,162,TRUE,italy,14
 22,suzuka,Suzuka Circuit,Suzuka,Japan,34.8431,136.541,45,FALSE,Covid,-1
-32,rodriguez,Autódromo Hermanos Rodríguez,Mexico City,Mexico,19.4042,-99.0907,2227,TRUE,https://leoframba.github.io/Final/MexicoGP/,18
-6,monaco,Circuit de Monaco,Monte-Carlo,Monaco,43.7347,7.42056,7,TRUE,https://leoframba.github.io/Final/MonacoGP/,5
-39,zandvoort,Circuit Park Zandvoort,Zandvoort,Netherlands,52.3888,4.54092,6,TRUE,https://leoframba.github.io/Final/DutchGP/,13
-75,portimao,Autódromo Internacional do Algarve,Portimão,Portugal,37.227,-8.6267,108,TRUE,https://leoframba.github.io/Final/PortugueseGP/,3
-78,losail,Losail International Circuit,Al Daayen,Qatar,25.49,51.4542,\N,TRUE,https://leoframba.github.io/Final/QatarGP/,20
-71,sochi,Sochi Autodrom,Sochi,Russia,44.4057,39.9578,2,TRUE,https://leoframba.github.io/Final/RussianGP/,15
-77,jeddah,Jeddah Corniche Circuit,Jeddah,Saudi Arabia,21.6319,39.1044,15,TRUE,https://leoframba.github.io/Final/SaudiArabiaGP/,21
+32,rodriguez,Autódromo Hermanos Rodríguez,Mexico City,Mexico,19.4042,-99.0907,2227,TRUE,mexico,18
+6,monaco,Circuit de Monaco,Monte-Carlo,Monaco,43.7347,7.42056,7,TRUE,monaco,5
+39,zandvoort,Circuit Park Zandvoort,Zandvoort,Netherlands,52.3888,4.54092,6,TRUE,dutch,13
+75,portimao,Autódromo Internacional do Algarve,Portimão,Portugal,37.227,-8.6267,108,TRUE,port,3
+78,losail,Losail International Circuit,Al Daayen,Qatar,25.49,51.4542,\N,TRUE,qatar,20
+71,sochi,Sochi Autodrom,Sochi,Russia,44.4057,39.9578,2,TRUE,russia,15
+77,jeddah,Jeddah Corniche Circuit,Jeddah,Saudi Arabia,21.6319,39.1044,15,TRUE,saudi,21
 15,marina_bay,Marina Bay Street Circuit,Marina Bay,Singapore,1.2914,103.864,18,FALSE,Covid,-1
-4,catalunya,Circuit de Barcelona-Catalunya,Montmeló,Spain,41.57,2.26111,109,TRUE,https://leoframba.github.io/Final/SpanishGP/,4
-5,istanbul,Istanbul Park,Istanbul,Turkey,40.9517,29.405,130,TRUE,https://leoframba.github.io/Final/TurkishGP/,16
-24,yas_marina,Yas Marina Circuit,Abu Dhabi,UAE,24.4672,54.6031,3,TRUE,https://leoframba.github.io/Final/AbuDhabiGP/,22
-9,silverstone,Silverstone Circuit,Silverstone,UK,52.0786,-1.01694,153,TRUE,https://leoframba.github.io/Final/BritishGP/,10
-69,americas,Circuit of the Americas,Austin,USA,30.1328,-97.6411,161,TRUE,https://leoframba.github.io/Final/USGP/,17
+4,catalunya,Circuit de Barcelona-Catalunya,Montmeló,Spain,41.57,2.26111,109,TRUE,spanish,4
+5,istanbul,Istanbul Park,Istanbul,Turkey,40.9517,29.405,130,TRUE,turk,16
+24,yas_marina,Yas Marina Circuit,Abu Dhabi,UAE,24.4672,54.6031,3,TRUE,abu,22
+9,silverstone,Silverstone Circuit,Silverstone,UK,52.0786,-1.01694,153,TRUE,british,10
+69,americas,Circuit of the Americas,Austin,USA,30.1328,-97.6411,161,TRUE,us,17
 74,hanoi,Hanoi Street Circuit,Hanoi,Vietnam,21.0166,105.766,9,FALSE,Covid,-1
-21,imola,Autodromo Enzo e Dino Ferrari,Imola,Italy,44.3439,11.7167,37,TRUE,https://leoframba.github.io/Final/EmiliaGP/,2
-100,red_bull_ring,Red Bull Ring,Spielberg,Austria,47.2197,15.7647,678,TRUE,https://leoframba.github.io/Final/StyrianGP/,8
+21,imola,Autodromo Enzo e Dino Ferrari,Imola,Italy,44.3439,11.7167,37,TRUE,emilia,2
+100,red_bull_ring,Red Bull Ring,Spielberg,Austria,47.2197,15.7647,678,TRUE,styria,8

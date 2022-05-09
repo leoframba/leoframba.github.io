@@ -55,13 +55,6 @@ var projection = d3.geoEqualEarth()
 
 var path = d3.geoPath().projection(projection);
 
-// svg.append("rect")
-//     .attr("class", "background")
-//     .attr("width", width)
-//     .attr("height", height)
-//     //.attr("fill", "blue")
-//     .on("dblclick", reset);
-
 svg.append("text")
     .attr("x", width / 2)
     .attr("y", 100)
@@ -76,7 +69,6 @@ g.append("rect")
     .attr("class", "background")
     .attr("width", width)
     .attr("height", height)
-    //.attr("fill", "blue")
     .on("dblclick", reset);
 
 Promise.all([
@@ -193,7 +185,8 @@ Promise.all([
 
                     })
                     .on("click", function (elem) {
-                        window.location = d3.select(this).attr("link");
+                        let d = d3.select(this);
+                        document.getElementById(d.attr("link")).scrollIntoView();
                     })
             }
 
@@ -254,10 +247,11 @@ Promise.all([
             .append("path")
                 .attr("class", "countries")
                 .attr("d", path)
-                .attr("fill", "mintcream")
+                .attr("fill", "ghostwhite")
                 .attr("cursor", "pointer")
                 .attr("id", d => d.properties.sovereignt)
                 .attr("stroke-width", ".2px")
+                .attr("stroke", "black")
                 .attr("centX", function (d) {
                     let centroid = path.centroid(d)
                     return centroid[0];
@@ -289,6 +283,7 @@ Promise.all([
             .attr("r", 4)
             .attr("id", d => { return "f" + d.circuitId})
             .attr("name", d => d.name)
+            .attr("link", d => d.link)
             .attr("covid", d => d.covid)
             .attr("country", d => d.country)
             .attr("url", d => d.link)
@@ -305,20 +300,10 @@ Promise.all([
             .on("mouseover", mouseover)
             .on("mouseout", mouseleave)
             .on("mousemove", mousemove)
-            .on("click", click);
-
-        function hover(elem) {
-            var attrs = elem.srcElement.attributes;
-            console.log(attrs);
-            console.log(attrs.url.nodeValue)
-            svg.append("text")
-                .attr("transform", attrs.transform.nodeValue)
-                .attr("id", "hoverText")
-                .attr("pointer-events", "none")
-                .attr("text-anchor", "middle")
-                .attr("font-size", "20px")
-                .text(attrs.id.nodeValue);
-        }
+            .on("click", function () {
+                let d = d3.select(this);
+                document.getElementById(d.attr("link")).scrollIntoView();
+            });
 
         function mouseover () {
             console.log(d3.select(this));
@@ -339,15 +324,15 @@ Promise.all([
             if(d3.select(this).attr("covid") === "TRUE") {
                 tooltip
                     .html("Country: " + country + "<br>" + "Circuit: " + name)
-                    .style("left", (event.pageX + 9) + "px")
-                    .style("top", (event.pageY - 43) + "px")
             }else {
                 let status = d3.select(this).attr("url");
                 tooltip
                     .html("Country: " + country + "<br>" + "Circuit: " + name + "<br>Canceled: " + status)
-                    .style("left", (event.pageX + 9) + "px")
-                    .style("top", (event.pageY - 43) + "px")
             }
+
+            tooltip
+                .style("left", (event.pageX + 9) + "px")
+                .style("top", (event.pageY - 43) + "px")
         }
 
         function mouseleave() {
@@ -358,11 +343,6 @@ Promise.all([
                 .duration(200)
                 .attr("r", function (){ return zoom ? "1" : "4"})
                 .attr("cursor", "pointer")
-        }
-
-        function click(elem) {
-            var attrs = elem.srcElement.attributes;
-            window.location = attrs.url.nodeValue;
         }
     })
 
@@ -379,10 +359,6 @@ function clicked(elem) {
     let y;
     let zoomLevel;
     let d = d3.select(this);
-    var attrs = elem.srcElement.attributes;
-    // console.log("elem =" + elem.x);
-    // console.log("centered =" + centered);
-    // // console.log(attrs);
 
     if (elem && centered !== d.attr("centX")) {
         let centroid = [parseInt(d.attr("centX")), parseInt(d.attr("centY"))];
@@ -399,7 +375,7 @@ function clicked(elem) {
         zoomLevel = zoomSettings.zoomLevel;
         centered = d.attr("centX");
         g.selectAll(".countries")
-            .attr("fill", "mintcream")
+            .attr("fill", "ghostwhite")
             .attr("stroke-width", ".1px");
         g.selectAll(".flag")
             .transition()
@@ -437,7 +413,7 @@ function reset(){
     g.selectAll(".countries")
         .transition()
         .duration(1000)
-        .attr("fill", "mintcream")
+        .attr("fill", "ghostwhite")
         .attr("stroke-width", ".2px");
     g.selectAll(".flag")
         .transition()

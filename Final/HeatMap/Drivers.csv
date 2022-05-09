@@ -1,0 +1,21 @@
+DriverID,Name,Team,Color,Check
+815,Perez,Red Bull,#0600EF,FALSE
+832,Sainz,Ferrari,#DC0000,FALSE
+852,Yuki,AlphaTauri,#2B4562,FALSE
+4,Alonso,Alpine,#0090FF,FALSE
+822,Bottas,Mercedes,#00D2BE,FALSE
+817,Daniel,McLaren,#FF8700,FALSE
+842,Gasly,AlphaTauri,#2B4562,TRUE
+841,Gio,Alfa Romeo,#900000,FALSE
+1,Hamilton,Mercedes,#00D2BE,TRUE
+8,Kimi,Alfa Romeo,#900000,TRUE
+840,Lance Stroll,Aston Martin,#006F62,FALSE
+849,Latifi,Williams,#005AFF,FALSE
+844,Leclerc,Ferrari,#DC0000,TRUE
+830,Max,Red Bull,#0600EF,TRUE
+854,Mick,Haas,#8FBC8F,FALSE
+853,Nikita,Haas,#8FBC8F,TRUE
+846,Norris,McLaren,#FF8700,TRUE
+839,Ocon,Alpine,#0090FF,TRUE
+20,Vettel,Aston Martin,#006F62,TRUE
+847,George,Williams,#005AFF,TRUE
