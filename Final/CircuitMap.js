@@ -1,5 +1,4 @@
 
-
 //Main map
 const width = 1100;
 const height = 600;
@@ -12,7 +11,7 @@ const svg = d3.select("#d3-container-CircuitMap")
     .attr("width", width)
     .attr("viewBox", [0, 0, width, height])
 
-//toolbar
+//Toolbar
 const toolD = {h: 50, w : width}
 const tool = d3.select("#d3-container-CircuitMap")
     .append("svg")
@@ -47,6 +46,7 @@ const raceTable = d3.select("#d3-container-CircuitMap")
     .attr("viewBox", [0, 0, rtSet.w, rtSet.h])
     .style("border", "1px solid black")
 
+//Projection
 var projection = d3.geoEqualEarth()
     .scale(250)
     .center([15, 10])
@@ -54,6 +54,7 @@ var projection = d3.geoEqualEarth()
 
 
 var path = d3.geoPath().projection(projection);
+
 
 svg.append("text")
     .attr("x", width / 2)
@@ -63,8 +64,9 @@ svg.append("text")
     .text("");
 
 const g = svg.append("g");
-const circCount = [];
+const circCount = []; //Array for each countries' circ count
 
+//Background for double click to unzoom
 g.append("rect")
     .attr("class", "background")
     .attr("width", width)
@@ -87,9 +89,6 @@ Promise.all([
                 circCount.push({id: d.country, count: 1});
             }else circCount[i].count++;
         })
-        console.log(countData)
-        console.log(circData)
-        console.log(circCount);
 
         //Race Table
         const circCols = ["Race #", "Circuit", "Country"]
@@ -280,7 +279,7 @@ Promise.all([
         //Symbols
         const circFlags = g.selectAll(".flag")
             .data(circData).enter()
-            .append("circle", ".flag")
+            .append("circle")
             .attr("class", "flag")
             .attr("r", 4)
             .attr("id", d => { return "f" + d.circuitId})
@@ -311,11 +310,15 @@ Promise.all([
             console.log(d3.select(this));
             tooltip
                 .style("opacity", 1)
-            d3.select(this)
+            d3.selectAll(".flag")
+                .attr("opacity", ".5")
+            let d = d3.select(this);
+            d.attr("opacity", "1");
+            d
                 .transition()
                 .duration(200)
                 .attr("r", function () { return zoom ? "3" : "10"})
-                .attr("cursor", "pointer")
+                .attr("cursor", "pointer");
         }
 
         function mousemove(event) {
@@ -346,6 +349,8 @@ Promise.all([
                 .duration(200)
                 .attr("r", function (){ return zoom ? "1" : "4"})
                 .attr("cursor", "pointer")
+            d3.selectAll(".flag")
+                .attr("opacity", "1")
         }
     })
 
@@ -364,10 +369,11 @@ function clicked(elem) {
     let d = d3.select(this);
 
     if (elem && centered !== d.attr("centX")) {
-        let centroid = [parseInt(d.attr("centX")), parseInt(d.attr("centY"))];
+        let centroid = [parseInt(d.attr("centX")), parseInt(d.attr("centY"))]; //find center of country
         x =  centroid[0];
         y =  centroid[1];
-        //Todo fix shit code for centroid
+
+        //Todo fix code for large countries
         if(d.attr("id") === "Russia"){
             x -= 100;
             y += 20;
@@ -408,6 +414,7 @@ function clicked(elem) {
     }
 }
 
+//Function for zoom reset on double click
 function reset(){
     centered = null;
     g.transition()

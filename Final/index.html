@@ -1,55 +1,12 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>CS360 Final - Circuit Map</title>-->
-<!--    <script src="https://d3js.org/d3.v7.min.js"></script>-->
-<!--    <script src="https://unpkg.com/topojson@3"></script>-->
-<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.js"></script>-->
-<!--</head>-->
-<!--<style>-->
-
-<!--    #d3-container-CircuitMap{-->
-<!--        width: 1800px;-->
-<!--        font-size: 0;-->
-<!--        column-count: 2;-->
-<!--    }-->
-<!--    .tooltip {-->
-<!--        display: inline;-->
-<!--        position: fixed;-->
-<!--    }-->
-
-<!--    .background {-->
-<!--        fill: steelblue;-->
-<!--        fill-opacity: .4;-->
-<!--        pointer-events: all;-->
-<!--    }-->
-
-<!--    path {-->
-<!--        stroke: black;-->
-<!--    }-->
-
-
-<!--</style>-->
-
-
-<!--<body>-->
-<!--<div style="text-align: center" id="d3-container-CircuitMap"></div>-->
-<!--<script src="CircuitMap.js"></script>-->
-<!--</body>-->
-<!--</html>-->
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>CS360 Final Project</title>
 
 
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="https://unpkg.com/topojson@3"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.js"></script>
-
 
     <style>
         .raceTrace{
@@ -187,6 +144,19 @@
         <section id="introduction">
             <h2>Introduction</h2>
             <img src="IntroPic.jpeg" alt="Intro Pic">
+            <h4 style="margin-right: 100px">Formula 1, the most popular motor-sport in the world, is regarded as the pinnacle of all motor racing.
+                Formula 1 has been actively racing since the 1950's with historical roots dating back to the 1920's.
+                The sport holds a basic model where teams consisting of two drivers race in a series of 22 races for a championship.
+                Championships are decided by an accumulation of points awarded to drivers at the end of each race based on their position.<br>
+
+                Formula 1 is a predominantly data driven sport due to its reliance on lap times and constantly evolving regulations.
+                Unlike traditional sports where the game remains relatively the same, Formula 1 is constantly evolving due to a mix of regulations and technological advancements in the cars.
+                Alongside each driver, there's a team of engineers and mechanics that are constantly analyzing data.
+                While the average fan watches the formula one spectacle from the broadcast the pit crew watches the race through a series of real-time data visualizations showcasing everything from lap times to how much rubber is left on the tires.
+                As someone who grew up watching Formula 1 races from the eyes of a fan, I wanted to see if I could approach the sport from the scope of the pit crew.
+                For my Data Visualization final project, I wanted to create a series of visualizations that would provide a solid recap of the races in the 2021 season.
+                Any user with a basic understating of the Formula 1 sport should be able to view my project and understand, in detail, the events of every single race.</h4>
+
         </section>
 
         <section id="circMap">
@@ -247,7 +217,7 @@
                 <p>…</p>
             </section>
 
-            <section id="styrian">
+            <section id="styria">
 <!--                <h2>Race #1 - Bahrain Grand Prix</h2>-->
                 <div class="raceTrace" style="text-align: center" id="d3-container-RaceTraceStyrian"></div>
                 <script src="StyrianGP/RaceTrace.js"></script>
@@ -276,9 +246,9 @@
             </section>
 
             <section id="belg">
-                <h2>Race #1 - Bahrain Grand Prix</h2>
+                <h2 style="margin-left: 80px">Race 12 - Belgium Grand Prix</h2>
 
-                <p>RAIN</p>
+                <h3 style="margin-left: 80px">Cancelled Due to Rain</h3>
             </section>
 
             <section id="dutch">
@@ -371,7 +341,7 @@
                     <li><a href="#monaco">R5 - Monaco GP</a></li>
                     <li><a href="#azer">R6 - Azer</a></li>
                     <li><a href="#french">R7 - French GP</a></li>
-                    <li><a href="#styrian">R8 - Styrian GP</a></li>
+                    <li><a href="#styria">R8 - Styrian GP</a></li>
                     <li><a href="#austria">R9 - Austrian GP</a></li>
                     <li><a href="#british">R10 - British GP</a></li>
                     <li><a href="#hung">R11 - Hungarian GP</a></li>

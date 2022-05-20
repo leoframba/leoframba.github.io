@@ -66,27 +66,27 @@ Promise.all([d3.csv("HeatMap/lapTimes.csv"), d3.csv("HeatMap/Drivers.csv")]).the
         .attr("id", 'yAxis')
         .style("font-size", "25px")
         .attr('transform', `translate(${margin.l}, 0)`)
-        .on("mouseover", function() {
-            let d = d3.select("#d3-container-Heatmap").select("#avgPos");
-            d.attr("opacity", "1")
-        })
-        .on("mouseout", function() {
-            let d = d3.select("#d3-container-Heatmap").select("#avgPos");
-            d.attr("opacity", "0")
-        })
         .call(yAxis)
 
     //Avg Pos
     svg.append("g")
         .attr("class", "yAxis")
         .attr("id", 'avgPos')
-        .attr("opacity", "0")
+        .attr("opacity", "1")
         .style("font-size", "25px")
         .attr('transform', `translate(${width - margin.r}, 0)`)
         .on("mouseover", function() {
             console.log("pizza")
         })
         .call(d3.axisRight(avgScale).tickSize(0).tickFormat(d3.format(".2f")))
+    svg.append("text")
+        .attr("transform", "rotate(90)")
+        .attr("x", height / 2 - 20)
+        .attr("y", -width + 30)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "25px")
+        .text("Average Lap Position");
+
 
 
     const xScale = d3.scaleBand()
